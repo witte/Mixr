@@ -36,6 +36,8 @@ ComboBox {
         background: Rectangle { color: "#f8f8f8" }
         implicitHeight: listview.contentHeight
 
+        closePolicy: Popup.NoAutoClose
+
         contentItem: ListView {
             id: listview
             clip: true
