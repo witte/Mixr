@@ -4,6 +4,8 @@
 #include <jack/jack.h>
 #include <jack/transport.h>
 
+namespace Mixr {
+
 Transport::Transport(jack_client_t *client) { this->client = client; }
 
 void Transport::rewind() { jack_transport_stop (client); jack_transport_locate(client, 0); }
@@ -30,3 +32,5 @@ QString Transport::getTime() {
 
     return qTime.toString("HH:mm:ss.zzz");
 }
+
+} // namespace Mixr

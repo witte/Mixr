@@ -4,6 +4,7 @@
 #include <QObject>
 #include <jack/jack.h>
 
+namespace Mixr {
 
 class Fader : public QObject
 {
@@ -53,5 +54,7 @@ private slots:
     void setPortVolumes();
 
 };
+
+} // namespace Mixr
 
 #endif // FADER_H

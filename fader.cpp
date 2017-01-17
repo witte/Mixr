@@ -2,6 +2,8 @@
 #include <math.h>
 #include "fader.h"
 
+namespace Mixr {
+
 void Fader::connectFrom(QString jack_port) {
 
     jack_port_disconnect(client, input_port_1);
@@ -108,3 +110,5 @@ Fader::~Fader()
     jack_port_unregister(client, output_port_2);
     jack_client_close(client);
 }
+
+} // namespace Mixr
