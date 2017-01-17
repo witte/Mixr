@@ -3,6 +3,8 @@
 #include <jack/jack.h>
 #include <jack/transport.h>
 
+namespace Mixr {
+
 //static void processs (jack_transport_state_t state, jack_nframes_t nframes, jack_position_t *pos, int, void *arg) {}
 static int processFader (jack_nframes_t nframes, void *arg)
 {
@@ -63,4 +65,4 @@ Mixer::Mixer(jack_client_t *j_client)
 
 }
 
-
+} // namespace Mixr

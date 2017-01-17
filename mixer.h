@@ -4,6 +4,8 @@
 #include <jack/jack.h>
 #include "fader.h"
 
+namespace Mixr {
+
 class Mixer
 {
 public:
@@ -20,5 +22,7 @@ public:
 
     static int process (jack_nframes_t nframes, void *arg);
 };
+
+} // namespace Mixr
 
 #endif // MIXER_H

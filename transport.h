@@ -5,6 +5,8 @@
 #include <jack/jack.h>
 #include <jack/transport.h>
 
+namespace Mixr {
+
 class Transport : public QObject
 {
     Q_OBJECT
@@ -25,5 +27,7 @@ public slots:
     QString getBBT();
 
 };
+
+} // namespace Mixr
 
 #endif // TRANSPORT_H
