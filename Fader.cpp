@@ -1,6 +1,6 @@
 #include <QString>
 #include <math.h>
-#include "fader.h"
+#include "Fader.h"
 
 namespace Mixr {
 

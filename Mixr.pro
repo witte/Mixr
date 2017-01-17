@@ -3,9 +3,9 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    fader.cpp \
     transport.cpp \
-    mixer.cpp
+    mixer.cpp \
+    Fader.cpp
 
 RESOURCES += qml.qrc
 
@@ -20,8 +20,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    fader.h \
     transport.h \
-    mixer.h
+    mixer.h \
+    Fader.h
 
 DISTFILES +=
