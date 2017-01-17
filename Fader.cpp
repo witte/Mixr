@@ -4,6 +4,36 @@
 
 namespace Mixr {
 
+Fader::Fader(jack_client_t *j_client, QString name)
+{
+    this->client = j_client;
+    this->volume = 1.0f;
+    this->name = name;
+    this->pan = 0.5f;
+
+    QString s_input1 = name, s_input2 = name, s_output1 = name, s_output2 = name;
+    s_input1.append("/in 1");
+    s_input2.append("/in 2");
+    s_output1.append("/out 1");
+    s_output2.append("/out 2");
+
+
+    input_port_1    = jack_port_register (client, s_input1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+    input_port_2    = jack_port_register (client, s_input2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
+    output_port_1   = jack_port_register (client, s_output1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+    output_port_2   = jack_port_register (client, s_output2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+}
+
+Fader::~Fader()
+{
+    jack_deactivate(client);
+    jack_port_unregister(client, input_port_1);
+    jack_port_unregister(client, input_port_2);
+    jack_port_unregister(client, output_port_1);
+    jack_port_unregister(client, output_port_2);
+    jack_client_close(client);
+}
+
 void Fader::connectFrom(QString jack_port) {
 
     jack_port_disconnect(client, input_port_1);
@@ -79,36 +109,5 @@ QStringList Fader::getJackPorts(JackPortFlags jackPortFlags) {
 
 QStringList Fader::getJackInputPorts()  { return getJackPorts(JackPortIsInput); }
 QStringList Fader::getJackOutputPorts() { return getJackPorts(JackPortIsOutput); }
-
-
-Fader::Fader(jack_client_t *j_client, QString name)
-{
-    this->client = j_client;
-    this->volume = 1.0f;
-    this->name = name;
-    this->pan = 0.5f;
-
-    QString s_input1 = name, s_input2 = name, s_output1 = name, s_output2 = name;
-    s_input1.append("/in 1");
-    s_input2.append("/in 2");
-    s_output1.append("/out 1");
-    s_output2.append("/out 2");
-
-
-    input_port_1    = jack_port_register (client, s_input1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-    input_port_2    = jack_port_register (client, s_input2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-    output_port_1   = jack_port_register (client, s_output1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
-    output_port_2   = jack_port_register (client, s_output2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
-}
-
-Fader::~Fader()
-{
-    jack_deactivate(client);
-    jack_port_unregister(client, input_port_1);
-    jack_port_unregister(client, input_port_2);
-    jack_port_unregister(client, output_port_1);
-    jack_port_unregister(client, output_port_2);
-    jack_client_close(client);
-}
 
 } // namespace Mixr

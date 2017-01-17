@@ -12,6 +12,7 @@ class Fader : public QObject
 
 public:
     Fader(jack_client_t *j_client, QString name);
+    ~Fader();
 
     jack_client_t *client;
     jack_port_t *input_port_1;
@@ -29,8 +30,6 @@ public:
 
     float peakL = 0.0f;
     float peakR = 0.0f;
-
-    ~Fader();
 
 private:
     QStringList port_names;
