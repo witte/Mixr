@@ -11,27 +11,28 @@ class Fader : public QObject
     Q_OBJECT
 
 public:
-    Fader(jack_client_t *j_client, QString name);
+    Fader(jack_client_t *j_client, const QString& name);
     ~Fader();
 
-    jack_client_t *client;
-    jack_port_t *input_port_1;
-    jack_port_t *input_port_2;
-    jack_port_t *output_port_1;
-    jack_port_t *output_port_2;
+    jack_client_t *client{nullptr};
+    jack_port_t *input_port_1{nullptr};
+    jack_port_t *input_port_2{nullptr};
+    jack_port_t *output_port_1{nullptr};
+    jack_port_t *output_port_2{nullptr};
 
     QString name;
 
-    bool mute;
-    float volume;
-    float pan;
-    float volL = 1;
-    float volR = 1;
-
-    float peakL = 0.0f;
-    float peakR = 0.0f;
+    bool mute{false};
+    float volume{1.0f};
+    float pan{0.5f};
+    float volL{1.0f};
+    float volR{1.0f};
+    float peakL{0.0f};
+    float peakR{0.0f};
 
 private:
+    jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
+
     QStringList port_names;
 
 public slots:

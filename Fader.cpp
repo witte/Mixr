@@ -4,24 +4,14 @@
 
 namespace Mixr {
 
-Fader::Fader(jack_client_t *j_client, QString name)
+Fader::Fader(jack_client_t *j_client, const QString& name)
+    : client{j_client},
+      name{name}
 {
-    this->client = j_client;
-    this->volume = 1.0f;
-    this->name = name;
-    this->pan = 0.5f;
-
-    QString s_input1 = name, s_input2 = name, s_output1 = name, s_output2 = name;
-    s_input1.append("/in 1");
-    s_input2.append("/in 2");
-    s_output1.append("/out 1");
-    s_output2.append("/out 2");
-
-
-    input_port_1    = jack_port_register (client, s_input1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-    input_port_2    = jack_port_register (client, s_input2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
-    output_port_1   = jack_port_register (client, s_output1.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
-    output_port_2   = jack_port_register (client, s_output2.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+    input_port_1 = registerPort(name + "/in 1", JackPortIsInput);
+    input_port_2 = registerPort(name + "/in 2", JackPortIsInput);
+    output_port_1 = registerPort(name + "/out 1", JackPortIsOutput);
+    output_port_2 = registerPort(name + "/out 2", JackPortIsOutput);
 }
 
 Fader::~Fader()
@@ -32,6 +22,10 @@ Fader::~Fader()
     jack_port_unregister(client, output_port_1);
     jack_port_unregister(client, output_port_2);
     jack_client_close(client);
+}
+
+jack_port_t* Fader::registerPort(const QString& name, const JackPortFlags portFlags) const {
+    return jack_port_register(client, name.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
 }
 
 void Fader::connectFrom(QString jack_port) {
