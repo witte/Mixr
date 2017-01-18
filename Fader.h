@@ -18,6 +18,38 @@ public:
     Fader(jack_client_t *j_client, const QString& name);
     ~Fader();
 
+public slots:
+    jack_port_t* getInputPort1();
+    jack_port_t* getInputPort2();
+    jack_port_t* getOutputPort1();
+    jack_port_t* getOutputPort2();
+
+    float getPeakL() const;
+    void setPeakL(const float peak);
+
+    float getPeakR() const;
+    void setPeakR(const float peak);
+
+    float getVolumeL() const;
+    float getVolumeR() const;
+
+    bool isMuted() const;
+    void isMuted(const bool isMute);
+
+    float getPan() const;
+    void setPan(const float panValue);
+
+    void connectFrom(QString jack_port);
+    void connectTo(QString jack_port);
+    void setVolume(float a);
+    QStringList getJackInputPorts();
+    QStringList getJackOutputPorts();
+
+private:
+    jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
+    QStringList getJackPorts(JackPortFlags jackPortFlags);
+    void setPortVolumes();
+
     jack_client_t *client{nullptr};
     jack_port_t *input_port_1{nullptr};
     jack_port_t *input_port_2{nullptr};
@@ -25,6 +57,7 @@ public:
     jack_port_t *output_port_2{nullptr};
 
     QString name;
+    QStringList port_names{};
 
     bool mute{false};
     float volume{1.0f};
@@ -33,30 +66,6 @@ public:
     float volR{1.0f};
     float peakL{0.0f};
     float peakR{0.0f};
-
-private:
-    jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
-
-    QStringList port_names;
-
-public slots:
-    void connectFrom(QString jack_port);
-    void connectTo(QString jack_port);
-    void setVolume(float a);
-    void setMute(bool a);
-    void setPan(float a);
-
-    bool getMute();
-    QStringList getJackInputPorts();
-    QStringList getJackOutputPorts();
-
-protected:
-    float getPan();
-
-private slots:
-    QStringList getJackPorts(JackPortFlags jackPortFlags);
-    void setPortVolumes();
-
 };
 
 } // namespace Mixr

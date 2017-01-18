@@ -1,5 +1,7 @@
 #include "Fader.h"
 
+#include <qdebug.h>
+
 namespace Mixr {
 
 Fader::Fader(jack_client_t *j_client, const QString& name)
@@ -20,6 +22,63 @@ Fader::~Fader()
     jack_port_unregister(client, output_port_1);
     jack_port_unregister(client, output_port_2);
     jack_client_close(client);
+}
+
+jack_port_t* Fader::getInputPort1() {
+    return input_port_1;
+}
+
+jack_port_t* Fader::getInputPort2() {
+    return input_port_2;
+}
+
+jack_port_t* Fader::getOutputPort1() {
+    return output_port_1;
+}
+
+jack_port_t* Fader::getOutputPort2() {
+    return output_port_2;
+}
+
+float Fader::getPeakL() const {
+    return peakL;
+}
+
+void Fader::setPeakL(const float peak) {
+    peakL = peak;
+}
+
+float Fader::getPeakR() const {
+    return peakR;
+}
+
+void Fader::setPeakR(const float peak) {
+    peakR = peak;
+}
+
+float Fader::getVolumeL() const {
+    return volL;
+}
+
+float Fader::getVolumeR() const {
+    return volR;
+}
+
+bool Fader::isMuted() const {
+    return mute;
+}
+
+void Fader::isMuted(const bool isMute) {
+    mute = isMute;
+}
+
+float Fader::getPan() const {
+    return pan;
+}
+
+void Fader::setPan(const float panValue) {
+    pan = panValue;
+    setPortVolumes();
 }
 
 jack_port_t* Fader::registerPort(const QString& name, const JackPortFlags portFlags) const {
@@ -66,10 +125,6 @@ void Fader::connectTo(QString jack_port) {
 }
 
 void Fader::setVolume(float a)  { volume = a; setPortVolumes(); }
-void Fader::setPan   (float a)  { pan    = a; setPortVolumes(); }
-void Fader::setMute  (bool  a)  { mute   = a;  }
-bool Fader::getMute  ()         { return mute; }
-float Fader::getPan  ()         { return pan;  }
 
 void Fader::setPortVolumes() {
     volL = volume * ((1 - pan) * M_PI_2); // equal power, -3db at center
