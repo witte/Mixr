@@ -10,24 +10,24 @@ static int processFader (jack_nframes_t nframes, void *arg)
 {
     Fader* m_fader = (Fader*)arg;
 
-    jack_default_audio_sample_t *in_1  = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->input_port_1,  nframes);
-    jack_default_audio_sample_t *in_2  = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->input_port_2,  nframes);
-    jack_default_audio_sample_t *out_1 = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->output_port_1, nframes);
-    jack_default_audio_sample_t *out_2 = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->output_port_2, nframes);
+    jack_default_audio_sample_t *in_1  = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->getInputPort1(),  nframes);
+    jack_default_audio_sample_t *in_2  = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->getInputPort2(),  nframes);
+    jack_default_audio_sample_t *out_1 = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->getOutputPort1(), nframes);
+    jack_default_audio_sample_t *out_2 = (jack_default_audio_sample_t*)jack_port_get_buffer (m_fader->getOutputPort2(), nframes);
 
-    m_fader->peakL = 0.0f;
-    m_fader->peakR = 0.0f;
+    m_fader->setPeakL(0.0f);
+    m_fader->setPeakR(0.0f);
 
-    if (!m_fader->mute) {
-        float volL = m_fader->volL;
-        float volR = m_fader->volR;
+    if (!m_fader->isMuted()) {
+        float volL = m_fader->getVolumeL();
+        float volR = m_fader->getVolumeR();
 
         for (unsigned int i = 0; i < nframes; i++) {
             out_1[i] = in_1[i] * volL;
             out_2[i] = in_2[i] * volR;
 
-            if (out_1[i] > m_fader->peakL) m_fader->peakL = out_1[i];
-            if (out_2[i] > m_fader->peakR) m_fader->peakR = out_2[i];
+            if (out_1[i] > m_fader->getPeakL()) m_fader->setPeakL(out_1[i]);
+            if (out_2[i] > m_fader->getPeakR()) m_fader->setPeakR(out_2[i]);
         }
 
     } else {

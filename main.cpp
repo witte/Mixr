@@ -5,7 +5,7 @@
 #include <QQmlContext>
 #include <QProcess>
 
-#include <fader.h>
+#include <Fader.h>
 #include <transport.h>
 #include <mixer.h>
 

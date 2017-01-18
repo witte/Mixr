@@ -2,7 +2,7 @@
 #define MIXER_H
 
 #include <jack/jack.h>
-#include "fader.h"
+#include "Fader.h"
 
 namespace Mixr {
 

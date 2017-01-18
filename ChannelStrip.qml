@@ -51,7 +51,7 @@ Item {
 
         Controls.MuteButton {
             text: "M"
-            onClicked: fader.setMute(this.checked);
+            onClicked: fader.isMuted(this.checked);
         }
         Controls.SoloButton {
             text: "S"
