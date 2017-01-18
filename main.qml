@@ -22,13 +22,13 @@ ApplicationWindow {
         }
         spacing: 2
 
-        ChannelStrip { fader: c_fader_01 }
+        ChannelStrip { fader: c_ChannelStrip_01 }
 
-        ChannelStrip { fader: c_fader_02 }
+        ChannelStrip { fader: c_ChannelStrip_02 }
 
-        ChannelStrip { fader: c_fader_03 }
+        ChannelStrip { fader: c_ChannelStrip_03 }
 
-        ChannelStrip { fader: c_fader_04 }
+        ChannelStrip { fader: c_ChannelStrip_04 }
 
         Button {
             id: btn_AddChannel

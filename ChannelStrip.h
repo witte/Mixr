@@ -10,13 +10,13 @@ class QStringList;
 
 namespace Mixr {
 
-class Fader : public QObject
+class ChannelStrip : public QObject
 {
     Q_OBJECT
 
 public:
-    Fader(jack_client_t *j_client, const QString& name);
-    ~Fader();
+    ChannelStrip(jack_client_t *j_client, const QString& name);
+    ~ChannelStrip();
 
 public slots:
     jack_port_t* getInputPort1();

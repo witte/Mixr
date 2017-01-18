@@ -1,10 +1,10 @@
-#include "Fader.h"
+#include "ChannelStrip.h"
 
 #include <qdebug.h>
 
 namespace Mixr {
 
-Fader::Fader(jack_client_t *j_client, const QString& name)
+ChannelStrip::ChannelStrip(jack_client_t *j_client, const QString& name)
     : client{j_client},
       name{name}
 {
@@ -14,7 +14,7 @@ Fader::Fader(jack_client_t *j_client, const QString& name)
     output_port_2 = registerPort(name + "/out 2", JackPortIsOutput);
 }
 
-Fader::~Fader()
+ChannelStrip::~ChannelStrip()
 {
     jack_deactivate(client);
     jack_port_unregister(client, input_port_1);
@@ -24,68 +24,68 @@ Fader::~Fader()
     jack_client_close(client);
 }
 
-jack_port_t* Fader::getInputPort1() {
+jack_port_t* ChannelStrip::getInputPort1() {
     return input_port_1;
 }
 
-jack_port_t* Fader::getInputPort2() {
+jack_port_t* ChannelStrip::getInputPort2() {
     return input_port_2;
 }
 
-jack_port_t* Fader::getOutputPort1() {
+jack_port_t* ChannelStrip::getOutputPort1() {
     return output_port_1;
 }
 
-jack_port_t* Fader::getOutputPort2() {
+jack_port_t* ChannelStrip::getOutputPort2() {
     return output_port_2;
 }
 
-float Fader::getPeakL() const {
+float ChannelStrip::getPeakL() const {
     return peakL;
 }
 
-void Fader::setPeakL(const float peak) {
+void ChannelStrip::setPeakL(const float peak) {
     peakL = peak;
 }
 
-float Fader::getPeakR() const {
+float ChannelStrip::getPeakR() const {
     return peakR;
 }
 
-void Fader::setPeakR(const float peak) {
+void ChannelStrip::setPeakR(const float peak) {
     peakR = peak;
 }
 
-float Fader::getVolumeL() const {
+float ChannelStrip::getVolumeL() const {
     return volL;
 }
 
-float Fader::getVolumeR() const {
+float ChannelStrip::getVolumeR() const {
     return volR;
 }
 
-bool Fader::isMuted() const {
+bool ChannelStrip::isMuted() const {
     return mute;
 }
 
-void Fader::isMuted(const bool isMute) {
+void ChannelStrip::isMuted(const bool isMute) {
     mute = isMute;
 }
 
-float Fader::getPan() const {
+float ChannelStrip::getPan() const {
     return pan;
 }
 
-void Fader::setPan(const float panValue) {
+void ChannelStrip::setPan(const float panValue) {
     pan = panValue;
     setPortVolumes();
 }
 
-jack_port_t* Fader::registerPort(const QString& name, const JackPortFlags portFlags) const {
+jack_port_t* ChannelStrip::registerPort(const QString& name, const JackPortFlags portFlags) const {
     return jack_port_register(client, name.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
 }
 
-void Fader::connectFrom(const QString& portName) {
+void ChannelStrip::connectFrom(const QString& portName) {
     jack_port_disconnect(client, input_port_1);
     jack_port_disconnect(client, input_port_2);
 
@@ -103,7 +103,7 @@ void Fader::connectFrom(const QString& portName) {
     jack_connect(client, portName2, jack_port_name(input_port_2));
 }
 
-void Fader::connectTo(const QString& portName) {
+void ChannelStrip::connectTo(const QString& portName) {
     jack_port_disconnect(client, output_port_1);
     jack_port_disconnect(client, output_port_2);
 
@@ -119,11 +119,11 @@ void Fader::connectTo(const QString& portName) {
     }
 }
 
-bool Fader::hasSuffixOne(const QString& portName) const {
+bool ChannelStrip::hasSuffixOne(const QString& portName) const {
     return portName.mid(portName.length()-2, 2) == "_1";
 }
 
-QString Fader::ChangeSuffixToTwo(const QString& portName) const {
+QString ChannelStrip::ChangeSuffixToTwo(const QString& portName) const {
     QString str{portName};
     str.chop(2);
     str.append("_2");
@@ -131,17 +131,17 @@ QString Fader::ChangeSuffixToTwo(const QString& portName) const {
     return str;
 }
 
-void Fader::setVolume(const float volumeValue)  {
+void ChannelStrip::setVolume(const float volumeValue)  {
     volume = volumeValue;
     setPortVolumes();
 }
 
-void Fader::setPortVolumes() {
+void ChannelStrip::setPortVolumes() {
     volL = volume * ((1 - pan) * M_PI_2); // equal power, -3db at center
     volR = volume * (pan * M_PI_2);
 }
 
-QStringList Fader::getJackPorts(JackPortFlags jackPortFlags) {
+QStringList ChannelStrip::getJackPorts(JackPortFlags jackPortFlags) {
     const auto** ports = jack_get_ports(client, NULL, NULL, jackPortFlags);
 
     QStringList a{QString{"none"}};
@@ -165,11 +165,11 @@ QStringList Fader::getJackPorts(JackPortFlags jackPortFlags) {
     return a;
 }
 
-QStringList Fader::getJackInputPorts()  {
+QStringList ChannelStrip::getJackInputPorts()  {
     return getJackPorts(JackPortIsInput);
 }
 
-QStringList Fader::getJackOutputPorts() {
+QStringList ChannelStrip::getJackOutputPorts() {
     return getJackPorts(JackPortIsOutput);
 }
 

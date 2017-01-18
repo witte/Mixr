@@ -5,7 +5,7 @@ CONFIG += c++11
 SOURCES += main.cpp \
     transport.cpp \
     mixer.cpp \
-    Fader.cpp
+    ChannelStrip.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,6 +22,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     transport.h \
     mixer.h \
-    Fader.h
+    ChannelStrip.h
 
 DISTFILES +=

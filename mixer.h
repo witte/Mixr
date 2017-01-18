@@ -2,7 +2,7 @@
 #define MIXER_H
 
 #include <jack/jack.h>
-#include "Fader.h"
+#include "ChannelStrip.h"
 
 namespace Mixr {
 
@@ -10,13 +10,15 @@ class Mixer
 {
 public:
     Mixer(jack_client_t *j_client);
+    ~Mixer();
+    void cleanUp();
 
     jack_client_t *client;
 
-    Fader* fader_01;
-    Fader* fader_02;
-    Fader* fader_03;
-    Fader* fader_04;
+    ChannelStrip* channelStrip_01;
+    ChannelStrip* channelStrip_02;
+    ChannelStrip* channelStrip_03;
+    ChannelStrip* channelStrip_04;
 
     void setCallback();
 

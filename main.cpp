@@ -5,7 +5,7 @@
 #include <QQmlContext>
 #include <QProcess>
 
-#include <Fader.h>
+#include <ChannelStrip.h>
 #include <transport.h>
 #include <mixer.h>
 
@@ -23,21 +23,21 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Mixr::Fader m_Fader_01(client, "01");
-    Mixr::Fader m_Fader_02(client, "02");
-    Mixr::Fader m_Fader_03(client, "03");
-    Mixr::Fader m_Fader_04(client, "04");
+    Mixr::ChannelStrip m_ChannelStrip_01(client, "01");
+    Mixr::ChannelStrip m_ChannelStrip_02(client, "02");
+    Mixr::ChannelStrip m_ChannelStrip_03(client, "03");
+    Mixr::ChannelStrip m_ChannelStrip_04(client, "04");
 
     Mixr::Mixer m_Mixer(client);
-    m_Mixer.fader_01 = &m_Fader_01;
-    m_Mixer.fader_02 = &m_Fader_02;
-    m_Mixer.fader_03 = &m_Fader_03;
-    m_Mixer.fader_04 = &m_Fader_04;
+    m_Mixer.channelStrip_01 = &m_ChannelStrip_01;
+    m_Mixer.channelStrip_02 = &m_ChannelStrip_02;
+    m_Mixer.channelStrip_03 = &m_ChannelStrip_03;
+    m_Mixer.channelStrip_04 = &m_ChannelStrip_04;
 
-    engine.rootContext()->setContextProperty("c_fader_01", m_Mixer.fader_01);
-    engine.rootContext()->setContextProperty("c_fader_02", m_Mixer.fader_02);
-    engine.rootContext()->setContextProperty("c_fader_03", m_Mixer.fader_03);
-    engine.rootContext()->setContextProperty("c_fader_04", m_Mixer.fader_04);
+    engine.rootContext()->setContextProperty("c_ChannelStrip_01", m_Mixer.channelStrip_01);
+    engine.rootContext()->setContextProperty("c_ChannelStrip_02", m_Mixer.channelStrip_02);
+    engine.rootContext()->setContextProperty("c_ChannelStrip_03", m_Mixer.channelStrip_03);
+    engine.rootContext()->setContextProperty("c_ChannelStrip_04", m_Mixer.channelStrip_04);
 
     Mixr::Transport m_transport(client);
     engine.rootContext()->setContextProperty("c_transport", &m_transport);
