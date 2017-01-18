@@ -103,25 +103,23 @@ void Fader::connectFrom(const QString& portName) {
     jack_connect(client, portName2, jack_port_name(input_port_2));
 }
 
-void Fader::connectTo(QString jack_port) {
-
+void Fader::connectTo(const QString& portName) {
     jack_port_disconnect(client, output_port_1);
     jack_port_disconnect(client, output_port_2);
 
-    const char *c_str2 = jack_port.toLatin1().data();
-    jack_connect (client, jack_port_name (output_port_1), c_str2);
+    // connect output port 1
+    const auto* portName1 = portName.toLatin1().data();
+    jack_connect(client, jack_port_name(output_port_1), portName1);
 
-    QString suffix = jack_port.mid(jack_port.length()-2, 2);
-    if (suffix == "_1") {
-        jack_port.chop(2);
-        jack_port.append("_2");
-
-        c_str2 = jack_port.toLatin1().data();
-        jack_connect (client, jack_port_name (output_port_2), c_str2);
+    // connect output port 2
+    if (hasSuffixOne(portName)) {
+        const auto portNameSuffix2 = ChangeSuffixToTwo(portName);
+        const auto* portName2 = portNameSuffix2.toLatin1().data();
+        jack_connect(client, jack_port_name(output_port_2), portName2);
     }
 }
 
-QString Fader::hasSuffixOne(const QString& portName) const {
+bool Fader::hasSuffixOne(const QString& portName) const {
     return portName.mid(portName.length()-2, 2) == "_1";
 }
 
@@ -133,37 +131,46 @@ QString Fader::ChangeSuffixToTwo(const QString& portName) const {
     return str;
 }
 
-void Fader::setVolume(float a)  { volume = a; setPortVolumes(); }
+void Fader::setVolume(const float volumeValue)  {
+    volume = volumeValue;
+    setPortVolumes();
+}
 
 void Fader::setPortVolumes() {
     volL = volume * ((1 - pan) * M_PI_2); // equal power, -3db at center
     volR = volume * (pan * M_PI_2);
 }
 
-
 QStringList Fader::getJackPorts(JackPortFlags jackPortFlags) {
+    const auto** ports = jack_get_ports(client, NULL, NULL, jackPortFlags);
 
-    QStringList a;
-    const char **ports = jack_get_ports ( client, NULL, NULL, jackPortFlags );
-
-    a.append( "none" );
-    int i = 0;
+    QStringList a{QString{"none"}};
+    int i{0};
     while (ports[i] != NULL) {
         bool add = true;
-
         foreach (QString s, port_names) {
-            if (ports[i] == s) add = false;
+            if (ports[i] == s) {
+                add = false;
+            }
         }
 
-        if (add) a.append( ports[i] );
+        if (add) {
+            a.append(ports[i]);
+        }
         i++;
     }
-    jack_free (ports);
+
+    jack_free(ports);
 
     return a;
 }
 
-QStringList Fader::getJackInputPorts()  { return getJackPorts(JackPortIsInput); }
-QStringList Fader::getJackOutputPorts() { return getJackPorts(JackPortIsOutput); }
+QStringList Fader::getJackInputPorts()  {
+    return getJackPorts(JackPortIsInput);
+}
+
+QStringList Fader::getJackOutputPorts() {
+    return getJackPorts(JackPortIsOutput);
+}
 
 } // namespace Mixr
