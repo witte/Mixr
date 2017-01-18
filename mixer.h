@@ -22,6 +22,9 @@ public:
 
     void setCallback();
 
+private:
+    void unregisterChannelStripPorts(ChannelStrip* channelStrip);
+
     static int process (jack_nframes_t nframes, void *arg);
 };
 

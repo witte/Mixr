@@ -66,7 +66,22 @@ Mixer::Mixer(jack_client_t *j_client)
 
 Mixer::~Mixer()
 {
+    jack_deactivate(client);
 
+    unregisterChannelStripPorts(channelStrip_01);
+    unregisterChannelStripPorts(channelStrip_02);
+    unregisterChannelStripPorts(channelStrip_03);
+    unregisterChannelStripPorts(channelStrip_04);
+
+    jack_client_close(client);
+}
+
+void Mixer::unregisterChannelStripPorts(ChannelStrip *channelStrip)
+{
+    jack_port_unregister(client, channelStrip->getInputPort1());
+    jack_port_unregister(client, channelStrip->getInputPort2());
+    jack_port_unregister(client, channelStrip->getOutputPort1());
+    jack_port_unregister(client, channelStrip->getOutputPort2());
 }
 
 } // namespace Mixr

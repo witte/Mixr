@@ -8,7 +8,7 @@ Item {
     anchors.bottom: parent.bottom
     width: 82
 
-    property QtObject fader
+    property QtObject c_ChannelStrip
 
     Rectangle {
         anchors.fill: parent
@@ -20,8 +20,8 @@ Item {
         anchors.top: parent.top
         x: 1
 
-        model: fader.getJackOutputPorts()
-        onCurrentIndexChanged: fader.connectFrom( cmb_From.model[cmb_From.currentIndex] )
+        onCurrentIndexChanged: c_ChannelStrip.connectFrom( cmb_From.model[cmb_From.currentIndex] )
+        Component.onCompleted: this.model = c_ChannelStrip.getJackInputPorts()
     }
 
     Text {
@@ -33,13 +33,13 @@ Item {
     Controls.Knob {
         id: dial_Volume
         anchors.bottom: sld_Fader.top
-        onPositionChanged: fader.setPan(dial_Volume.position)
+        onPositionChanged: c_ChannelStrip.setPan(dial_Volume.position)
     }
 
     Controls.Fader {
         id: sld_Fader
         anchors.bottom: rowLayout1.top
-        onPositionChanged: fader.setVolume(sld_Fader.position)
+        onPositionChanged: c_ChannelStrip.setVolume(sld_Fader.position)
     }
 
     Row {
@@ -51,7 +51,7 @@ Item {
 
         Controls.MuteButton {
             text: "M"
-            onClicked: fader.isMuted(this.checked);
+            onClicked: c_ChannelStrip.isMuted(this.checked);
         }
         Controls.SoloButton {
             text: "S"
@@ -61,10 +61,11 @@ Item {
     PortsSelector {
         id: cmb_To
         anchors.bottom: parent.bottom
-        model: fader.getJackInputPorts()
         x: 1
 
-        onCurrentIndexChanged: fader.connectTo( cmb_To.model[cmb_To.currentIndex] )
+        onCurrentIndexChanged: c_ChannelStrip.connectTo( cmb_To.model[cmb_To.currentIndex] )
+
+        Component.onCompleted: this.model = c_ChannelStrip.getJackInputPorts()
     }
 
 }

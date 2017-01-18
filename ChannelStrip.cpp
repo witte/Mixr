@@ -16,12 +16,7 @@ ChannelStrip::ChannelStrip(jack_client_t *j_client, const QString& name)
 
 ChannelStrip::~ChannelStrip()
 {
-    jack_deactivate(client);
-    jack_port_unregister(client, input_port_1);
-    jack_port_unregister(client, input_port_2);
-    jack_port_unregister(client, output_port_1);
-    jack_port_unregister(client, output_port_2);
-    jack_client_close(client);
+
 }
 
 jack_port_t* ChannelStrip::getInputPort1() {
