@@ -1,5 +1,3 @@
-#include <QString>
-#include <math.h>
 #include "Fader.h"
 
 namespace Mixr {

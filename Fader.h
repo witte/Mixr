@@ -2,7 +2,11 @@
 #define FADER_H
 
 #include <QObject>
+#include <QString>
+
 #include <jack/jack.h>
+
+class QStringList;
 
 namespace Mixr {
 
