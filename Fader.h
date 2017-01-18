@@ -39,7 +39,7 @@ public slots:
     float getPan() const;
     void setPan(const float panValue);
 
-    void connectFrom(QString jack_port);
+    void connectFrom(const QString& portName);
     void connectTo(QString jack_port);
     void setVolume(float a);
     QStringList getJackInputPorts();
@@ -49,6 +49,9 @@ private:
     jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
     QStringList getJackPorts(JackPortFlags jackPortFlags);
     void setPortVolumes();
+
+    bool hasSuffixOne(const QString& portName) const;
+    QString ChangeSuffixToTwo(const QString& portName) const;
 
     jack_client_t *client{nullptr};
     jack_port_t *input_port_1{nullptr};

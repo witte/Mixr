@@ -85,25 +85,22 @@ jack_port_t* Fader::registerPort(const QString& name, const JackPortFlags portFl
     return jack_port_register(client, name.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
 }
 
-void Fader::connectFrom(QString jack_port) {
-
+void Fader::connectFrom(const QString& portName) {
     jack_port_disconnect(client, input_port_1);
     jack_port_disconnect(client, input_port_2);
 
-    const char *c_str2 = jack_port.toLatin1().data();
-    jack_connect (client, c_str2, jack_port_name (input_port_1));
+    // connect input port 1
+    const auto* portName1 = portName.toLatin1().data();
+    jack_connect(client, portName1, jack_port_name(input_port_1));
 
-    QString suffix = jack_port.mid(jack_port.length()-2, 2);
-    if (suffix == "_1") {
-        jack_port.chop(2);
-        jack_port.append("_2");
+    // connect input port 2
+    const auto* portName2 = portName1;
+    if (hasSuffixOne(portName)) {
+        const auto portNameSuffix2 = ChangeSuffixToTwo(portName);
+        portName2 = portNameSuffix2.toLatin1().data();
+    }
 
-        c_str2 = jack_port.toLatin1().data();
-        jack_connect (client, c_str2, jack_port_name (input_port_2));
-    }
-    else {
-        jack_connect (client, jack_port.toLatin1().data(), jack_port_name (input_port_2));
-    }
+    jack_connect(client, portName2, jack_port_name(input_port_2));
 }
 
 void Fader::connectTo(QString jack_port) {
@@ -122,6 +119,18 @@ void Fader::connectTo(QString jack_port) {
         c_str2 = jack_port.toLatin1().data();
         jack_connect (client, jack_port_name (output_port_2), c_str2);
     }
+}
+
+QString Fader::hasSuffixOne(const QString& portName) const {
+    return portName.mid(portName.length()-2, 2) == "_1";
+}
+
+QString Fader::ChangeSuffixToTwo(const QString& portName) const {
+    QString str{portName};
+    str.chop(2);
+    str.append("_2");
+
+    return str;
 }
 
 void Fader::setVolume(float a)  { volume = a; setPortVolumes(); }
