@@ -11,7 +11,6 @@ class Mixer
 public:
     Mixer(jack_client_t *j_client);
     ~Mixer();
-    void cleanUp();
 
     jack_client_t *client;
 

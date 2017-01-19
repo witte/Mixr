@@ -1,55 +1,41 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import "controls" as Controls
 
-ComboBox {
+
+Popup {
     id: control
-    height: 18
-    width: 80
 
-    indicator: null
+    signal s_ConnectPort(string port, bool connect, int side)
+    property ListModel model: ListModel {}
 
-    hoverEnabled: true
 
-    delegate: ItemDelegate {
-        width: 300
-        height: 22
+    width: 300
+    height: (listview.contentHeight > 400) ? 400 : listview.contentHeight
+    padding: 2
+    background: Rectangle { color: "#f8f8f8" }
 
-        contentItem: Text {
-            id: txt_PortName
-            height: 18
-            anchors.verticalCenter: parent.verticalCenter
-            verticalAlignment: Text.AlignVCenter
-
-            text: control.model[index]
-            font: control.font
-        }
-
-        highlighted: (cmb_To.highlightedIndex === index) || hovered
-        hoverEnabled: true
+    Button {
+        height: 18
+        width: 296
+        text: ""
+        onClicked: control.close()
     }
 
-    popup: Popup {
-        id: listPopup
-        y: control.height + 2
-        width: 300
-        padding: 2
-        background: Rectangle { color: "#f8f8f8" }
-        implicitHeight: listview.contentHeight
+    ListView {
+        anchors.fill: parent
+        anchors.topMargin: 20
 
-        closePolicy: Popup.NoAutoClose //new comment for #1-ports
+        id: listview
+        clip: true
 
-        contentItem: ListView {
-            id: listview
-            clip: true
+        model: control.model
 
-            model: control.popup.visible ? control.delegateModel : null
-            currentIndex: control.highlightedIndex
-
-            ScrollIndicator.vertical: ScrollIndicator { }
+        delegate: Controls.CheckPort {
+            text: portName
+            onConnected1Changed: { s_ConnectPort(portName, connected1, 1) }
+            onConnected2Changed: { s_ConnectPort(portName, connected2, 2) }
         }
-    }
 
-    ToolTip.delay: 600
-    ToolTip.visible: (hovered && !listPopup.visible)
-    ToolTip.text: control.currentText
+    }
 }

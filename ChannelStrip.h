@@ -40,7 +40,11 @@ public slots:
     void setPan(const float panValue);
 
     void connectFrom(const QString& portName);
+    int connectFrom(const QString& portName, const int side);
+    int disconnectFrom(const QString& portName, const int side);
     void connectTo(const QString& portName);
+    int connectTo(const QString& portName, const int side);
+    int disconnectTo(const QString& portName, const int side);
     void setVolume(const float volumeValue);
     QStringList getJackInputPorts();
     QStringList getJackOutputPorts();
