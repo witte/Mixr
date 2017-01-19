@@ -80,6 +80,28 @@ jack_port_t* ChannelStrip::registerPort(const QString& name, const JackPortFlags
     return jack_port_register(client, name.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
 }
 
+int ChannelStrip::connectFrom(const QString& portName, const int side) {
+    const auto* m_portName = portName.toLatin1().data();
+
+    if (side == 1)
+        return jack_connect(client, m_portName, jack_port_name(input_port_1));
+
+    else
+        return jack_connect(client, m_portName, jack_port_name(input_port_2));
+
+}
+
+int ChannelStrip::disconnectFrom(const QString& portName, const int side) {
+    const auto* m_portName = portName.toLatin1().data();
+
+    if (side == 1)
+        return jack_disconnect (client, m_portName, jack_port_name(input_port_1));
+
+    else
+        return jack_disconnect (client, m_portName, jack_port_name(input_port_2));
+
+}
+
 void ChannelStrip::connectFrom(const QString& portName) {
     jack_port_disconnect(client, input_port_1);
     jack_port_disconnect(client, input_port_2);
@@ -97,6 +119,30 @@ void ChannelStrip::connectFrom(const QString& portName) {
 
     jack_connect(client, portName2, jack_port_name(input_port_2));
 }
+
+int ChannelStrip::connectTo(const QString& portName, const int side) {
+    const auto* m_portName = portName.toLatin1().data();
+
+    if (side == 1)
+        return  jack_connect (client, jack_port_name(output_port_1), m_portName);
+
+    else
+        return  jack_connect (client, jack_port_name(output_port_2), m_portName);
+
+}
+
+
+int ChannelStrip::disconnectTo(const QString& portName, const int side) {
+    const auto* m_portName = portName.toLatin1().data();
+
+    if (side == 1)
+        return jack_disconnect (client, jack_port_name(output_port_1), m_portName);
+
+    else
+        return jack_disconnect (client, jack_port_name(output_port_2), m_portName);
+
+}
+
 
 void ChannelStrip::connectTo(const QString& portName) {
     jack_port_disconnect(client, output_port_1);
@@ -139,7 +185,7 @@ void ChannelStrip::setPortVolumes() {
 QStringList ChannelStrip::getJackPorts(JackPortFlags jackPortFlags) {
     const auto** ports = jack_get_ports(client, NULL, NULL, jackPortFlags);
 
-    QStringList a{QString{"none"}};
+    QStringList a{};
     int i{0};
     while (ports[i] != NULL) {
         bool add = true;

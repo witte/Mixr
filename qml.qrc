@@ -14,5 +14,8 @@
         <file>PortsSelector.qml</file>
         <file>controls/Fader.qml</file>
         <file>controls/Knob.qml</file>
+        <file>controls/CheckPort.qml</file>
+        <file>img/port-off.svg</file>
+        <file>img/port-on.svg</file>
     </qresource>
 </RCC>

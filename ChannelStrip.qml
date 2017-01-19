@@ -15,17 +15,51 @@ Item {
         color: "#eee"
     }
 
-    PortsSelector {
-        id: cmb_From
+    Button {
+        id: btn_From
         anchors.top: parent.top
+        anchors.topMargin: 1
+        height: 20
+        width: 80
         x: 1
 
-        onCurrentIndexChanged: c_ChannelStrip.connectFrom( cmb_From.model[cmb_From.currentIndex] )
-        Component.onCompleted: this.model = c_ChannelStrip.getJackInputPorts()
+        onPressed: {  if (!cmb_From.visible) cmb_From.open()  }
+
+        Component {  id: portsModel; ListModel { }  }
+
+        PortsSelector {
+            id: cmb_From
+            y: 1
+            x: 1
+
+
+            onS_ConnectPort: {
+
+                if (connect)
+                    c_ChannelStrip.connectFrom(port, side)
+
+                else
+                    c_ChannelStrip.disconnectFrom(port, side)
+
+            }
+
+            Component.onCompleted: {
+                var mdl_Source = c_ChannelStrip.getJackOutputPorts()
+                var mdl_Sorted = portsModel.createObject(this);
+
+                for (var i = 0; i < mdl_Source.length; i++)
+                    mdl_Sorted.append(  {"portName": mdl_Source[i]}  )
+
+                this.model = mdl_Sorted
+            }
+        }
+
     }
 
+
+
     Text {
-        anchors.top: cmb_From.bottom
+        anchors.top: btn_From.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         text: "+"
     }
@@ -44,7 +78,7 @@ Item {
 
     Row {
         id: rowLayout1
-        anchors.bottom: cmb_To.top
+        anchors.bottom: btn_To.top
         anchors.bottomMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 2
@@ -58,14 +92,46 @@ Item {
         }
     }
 
-    PortsSelector {
-        id: cmb_To
+    Button {
+        id: btn_To
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 1
+        height: 20
+        width: 80
         x: 1
 
-        onCurrentIndexChanged: c_ChannelStrip.connectTo( cmb_To.model[cmb_To.currentIndex] )
+        onPressed: {  if (!cmb_To.visible) cmb_To.open()  }
 
-        Component.onCompleted: this.model = c_ChannelStrip.getJackInputPorts()
+        Component {  id: portsModel2; ListModel { }  }
+
+        PortsSelector {
+            id: cmb_To
+//            y: 1
+            y: -this.height + 20
+            x: 1
+
+
+            onS_ConnectPort: {
+
+                if (connect)
+                    c_ChannelStrip.connectTo(port, side)
+
+                else
+                    c_ChannelStrip.disconnectTo(port, side)
+
+            }
+
+            Component.onCompleted: {
+                var mdl_Source = c_ChannelStrip.getJackInputPorts()
+                var mdl_Sorted = portsModel2.createObject(this);
+
+                for (var i = 0; i < mdl_Source.length; i++)
+                    mdl_Sorted.append(  {"portName": mdl_Source[i]}  )
+
+                this.model = mdl_Sorted
+            }
+        }
+
     }
 
 }
