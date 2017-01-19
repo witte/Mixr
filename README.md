@@ -6,6 +6,6 @@ Just a little project that I'm using to learn C++, the Qt framework and QML. The
 Pretty much useless at the moment.
 
 Requirements:
-  - Qt Framework (http://qt.io/)
+  - Qt Framework (minimum version 5.7, http://qt.io/)
   - JACK Audio Connection Kit (http://jackaudio.org/)
   - JACK development libraries (libjack-jackd2-dev on Ubuntu)
