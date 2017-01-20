@@ -44,6 +44,7 @@ static int processMixer (jack_nframes_t nframes, void *arg) {
     processChannelStrip (nframes, m_Mixer->channelStrip_02);
     processChannelStrip (nframes, m_Mixer->channelStrip_03);
     processChannelStrip (nframes, m_Mixer->channelStrip_04);
+    processChannelStrip (nframes, m_Mixer->channelStrip_05);
 
     return 0;
 }
@@ -64,6 +65,7 @@ Mixer::Mixer(jack_client_t *clientName) :
 
 }
 
+
 Mixer::~Mixer()
 {
     jack_deactivate(client);
@@ -72,6 +74,7 @@ Mixer::~Mixer()
     unregisterChannelStripPorts(channelStrip_02);
     unregisterChannelStripPorts(channelStrip_03);
     unregisterChannelStripPorts(channelStrip_04);
+    unregisterChannelStripPorts(channelStrip_05);
 
     jack_client_close(client);
 }

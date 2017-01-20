@@ -10,6 +10,7 @@ class Mixer
 {
 public:
     Mixer(jack_client_t *j_client);
+    Mixer(jack_client_t *clientName, Mixer *parentMixer);
     ~Mixer();
 
     jack_client_t *client;
@@ -18,6 +19,7 @@ public:
     ChannelStrip* channelStrip_02;
     ChannelStrip* channelStrip_03;
     ChannelStrip* channelStrip_04;
+    ChannelStrip* channelStrip_05;
 
     void setCallback();
 

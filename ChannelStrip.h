@@ -24,6 +24,9 @@ public slots:
     jack_port_t* getOutputPort1();
     jack_port_t* getOutputPort2();
 
+    QString getName() const;
+    void setName(const QString channelStripName);
+
     float getPeakL() const;
     void setPeakL(const float peak);
 
@@ -38,6 +41,9 @@ public slots:
 
     float getPan() const;
     void setPan(const float panValue);
+
+    ChannelStrip* getParent();
+    void setParent(ChannelStrip* parentChannelStrip);
 
     void connectFrom(const QString& portName);
     int connectFrom(const QString& portName, const int side);
@@ -62,6 +68,8 @@ private:
     jack_port_t *input_port_2{nullptr};
     jack_port_t *output_port_1{nullptr};
     jack_port_t *output_port_2{nullptr};
+
+    ChannelStrip *parent{nullptr};
 
     QString name;
     QStringList port_names{};

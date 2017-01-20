@@ -24,6 +24,7 @@ Item {
         x: 1
 
         onPressed: {  if (!cmb_From.visible) cmb_From.open()  }
+        Component.onCompleted: this.text = c_ChannelStrip.getName()
 
         Component {  id: portsModel; ListModel { }  }
 
@@ -78,7 +79,7 @@ Item {
 
     Row {
         id: rowLayout1
-        anchors.bottom: btn_To.top
+        anchors.bottom: parent.bottom
         anchors.bottomMargin: 4
         anchors.horizontalCenter: parent.horizontalCenter
         spacing: 2
@@ -91,7 +92,7 @@ Item {
             text: "S"
         }
     }
-
+/*
     Button {
         id: btn_To
         anchors.bottom: parent.bottom
@@ -133,5 +134,5 @@ Item {
         }
 
     }
-
+*/
 }

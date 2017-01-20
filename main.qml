@@ -30,6 +30,8 @@ ApplicationWindow {
 
         ChannelStrip { c_ChannelStrip: c_ChannelStrip_04 }
 
+        ChannelStrip { c_ChannelStrip: c_ChannelStrip_05 }
+
         Button {
             id: btn_AddChannel
 

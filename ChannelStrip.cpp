@@ -8,10 +8,10 @@ ChannelStrip::ChannelStrip(jack_client_t *clientName, const QString& stripName) 
     client{clientName},
     name{stripName}
 {
-    input_port_1 = registerPort(name + "/in 1", JackPortIsInput);
-    input_port_2 = registerPort(name + "/in 2", JackPortIsInput);
-    output_port_1 = registerPort(name + "/out 1", JackPortIsOutput);
-    output_port_2 = registerPort(name + "/out 2", JackPortIsOutput);
+    input_port_1 = registerPort(name + "in_1", JackPortIsInput);
+    input_port_2 = registerPort(name + "in_2", JackPortIsInput);
+    output_port_1 = registerPort(name + "out_1", JackPortIsOutput);
+    output_port_2 = registerPort(name + "out_2", JackPortIsOutput);
 }
 
 ChannelStrip::~ChannelStrip()
@@ -33,6 +33,13 @@ jack_port_t* ChannelStrip::getOutputPort1() {
 
 jack_port_t* ChannelStrip::getOutputPort2() {
     return output_port_2;
+}
+
+QString ChannelStrip::getName() const {
+    return name;
+}
+void ChannelStrip::setName(const QString channelStripName) {
+    name = channelStripName;
 }
 
 float ChannelStrip::getPeakL() const {
@@ -74,6 +81,22 @@ float ChannelStrip::getPan() const {
 void ChannelStrip::setPan(const float panValue) {
     pan = panValue;
     setPortVolumes();
+}
+
+ChannelStrip* ChannelStrip::getParent() {
+    return parent;
+}
+
+void ChannelStrip::setParent(ChannelStrip* parentChannelStrip) {
+    parent = parentChannelStrip;
+
+//    qDebug("Setting parent: %s -> %s", jackQMixer_port_name(output_port_1), jack_port_name(parent->input_port_1));
+
+//    qDebug("%i", jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) ) );
+//    qDebug("%i", jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) ) );
+    jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) );
+    jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) );
+
 }
 
 jack_port_t* ChannelStrip::registerPort(const QString& portName, const JackPortFlags portFlags) const {
