@@ -4,9 +4,9 @@
 
 namespace Mixr {
 
-ChannelStrip::ChannelStrip(jack_client_t *j_client, const QString& name)
-    : client{j_client},
-      name{name}
+ChannelStrip::ChannelStrip(jack_client_t *clientName, const QString& stripName) :
+    client{clientName},
+    name{stripName}
 {
     input_port_1 = registerPort(name + "/in 1", JackPortIsInput);
     input_port_2 = registerPort(name + "/in 2", JackPortIsInput);
@@ -76,8 +76,8 @@ void ChannelStrip::setPan(const float panValue) {
     setPortVolumes();
 }
 
-jack_port_t* ChannelStrip::registerPort(const QString& name, const JackPortFlags portFlags) const {
-    return jack_port_register(client, name.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
+jack_port_t* ChannelStrip::registerPort(const QString& portName, const JackPortFlags portFlags) const {
+    return jack_port_register(client, portName.toLatin1().data(), JACK_DEFAULT_AUDIO_TYPE, portFlags, 0);
 }
 
 int ChannelStrip::connectFrom(const QString& portName, const int side) {

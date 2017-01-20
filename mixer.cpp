@@ -58,9 +58,9 @@ void Mixer::setCallback() {
 
 
 
-Mixer::Mixer(jack_client_t *j_client)
+Mixer::Mixer(jack_client_t *clientName) :
+    client {clientName}
 {
-    this->client = j_client;
 
 }
 

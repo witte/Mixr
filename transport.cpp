@@ -6,7 +6,9 @@
 
 namespace Mixr {
 
-Transport::Transport(jack_client_t *client) { this->client = client; }
+Transport::Transport(jack_client_t *clientName) :
+    client {clientName}
+{  }
 
 void Transport::rewind() { jack_transport_stop (client); jack_transport_locate(client, 0); }
 void Transport::start()  { jack_transport_start(client); }
