@@ -7,6 +7,8 @@ SOURCES += main.cpp \
     mixer.cpp \
     ChannelStrip.cpp
 
+QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -pedantic-errors
+
 RESOURCES += qml.qrc
 
 LIBS += -ljack
