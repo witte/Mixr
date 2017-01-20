@@ -12,7 +12,7 @@ class Transport : public QObject
     Q_OBJECT
 
 public:
-    Transport(jack_client_t *client);
+    Transport(jack_client_t *jackClient);
 
     jack_client_t *client;
     float bpm;

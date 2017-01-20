@@ -15,7 +15,7 @@ class ChannelStrip : public QObject
     Q_OBJECT
 
 public:
-    ChannelStrip(jack_client_t *j_client, const QString& name);
+    ChannelStrip(jack_client_t *j_client, const QString& stripName);
     ~ChannelStrip();
 
 public slots:
@@ -50,7 +50,7 @@ public slots:
     QStringList getJackOutputPorts();
 
 private:
-    jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
+    jack_port_t* registerPort(const QString& portName, const JackPortFlags portFlags) const;
     QStringList getJackPorts(JackPortFlags jackPortFlags);
     void setPortVolumes();
 
