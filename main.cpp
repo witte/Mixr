@@ -3,13 +3,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlComponent>
 #include <QQmlContext>
-//#include <QProcess>
-//#include <QAbstractItemModel>
 
-//#include <ChannelStrip.h>
-#include <ChannelStripModel.h>
-#include <transport.h>
-//#include <mixer.h>
+#include "ChannelStripModel.h"
+#include "transport.h"
 
 jack_client_t* client;
 
