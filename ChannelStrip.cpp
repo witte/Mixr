@@ -87,9 +87,22 @@ ChannelStrip* ChannelStrip::getParent() {
 
 void ChannelStrip::setParent(ChannelStrip* parentChannelStrip) {
     parent = parentChannelStrip;
+    level = parent->level+1;
 
     jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) );
     jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) );
+}
+
+uint ChannelStrip::getColor() const {
+    return color;
+}
+
+void ChannelStrip::setColor(const uint colorValue) {
+    color = colorValue;
+}
+
+uint ChannelStrip::getLevel() const {
+    return level;
 }
 
 jack_port_t* ChannelStrip::registerPort(const QString& portName, const JackPortFlags portFlags) const {

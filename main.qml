@@ -1,6 +1,7 @@
 import QtQuick.Controls 2.0
 import QtQuick 2.7
 
+
 ApplicationWindow {
     id: applicationWindow1
     visible: true
@@ -12,12 +13,12 @@ ApplicationWindow {
 
     header: TransportBar { transport: c_transport }
 
-    Rectangle { anchors.fill: row1; color: "#6e9b6e" }
-
     ListView {
         id: row1
         anchors.fill: parent
         anchors.margins: 4
+
+//        Uncomment these to see how Qt handles the delegates creation and destruction
 //        anchors.leftMargin: 250
 //        anchors.rightMargin: 250
 

@@ -1,2 +1,2 @@
 module ExampleModule
-singleton CentralData 1.0 StyleDefault.qml
+singleton StyleDefault 1.0 StyleDefault.qml

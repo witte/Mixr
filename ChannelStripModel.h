@@ -36,15 +36,19 @@ public:
     };
     Q_ENUM(Roles)
 
+
     Q_INVOKABLE bool setPan   (int row, const float &value);
     Q_INVOKABLE bool setVolume(int row, const float &value);
     Q_INVOKABLE bool setMute  (int row, const bool  &value);
+    Q_INVOKABLE bool setColor (int row, const char  &value);
     Q_INVOKABLE QStringList getJackOutputPorts();
     Q_INVOKABLE int connectFrom(int row, const QString& portName, const int side);
     Q_INVOKABLE int disconnectFrom(int row, const QString& portName, const int side);
 
-    void add(ChannelStrip* channelStrip, ChannelStrip* channelStripParent);
-    Q_INVOKABLE void add(QString channelStripName, QString channelStripParentName);
+    ChannelStrip* getChannelStripByName(const QString channelStripName) const;
+
+//    void add(ChannelStrip* channelStrip, ChannelStrip* channelStripParent);
+    Q_INVOKABLE void add(const QString channelStripName, const QString channelStripParentName);
 
     void setCallback(jack_client_t* callBackJackClient);
     jack_client_t* jackClient;

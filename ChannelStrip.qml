@@ -1,14 +1,22 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import QtQuick.Controls.Styles 1.4
 import "controls" as Controls
+import "style"
 
 ItemDelegate {
     id: control
     anchors.top: parent.top
     anchors.bottom: parent.bottom
+    anchors.bottomMargin: 8 * (csLevel + 1)
     width: 82
 
     property QtObject csModel
+
+    background: Rectangle {
+        anchors.fill: parent
+        color: "#eee"
+    }
 
     Item {
         id: mst_Channel
@@ -17,10 +25,6 @@ ItemDelegate {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
-        Rectangle {
-            anchors.fill: parent
-            color: "#eee"
-        }
 
         Button {
             id: btn_From
@@ -30,6 +34,28 @@ ItemDelegate {
             width: 80
             x: 1
             text: csName
+
+
+            background: Rectangle {
+                color: StyleDefault.csColors[csColor].bgColor
+                opacity: enabled ? 1 : 0.3
+            }
+
+
+            contentItem: Text {
+                text: btn_From.text
+                color: StyleDefault.csColors[csColor].textColor
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+
+            hoverEnabled: true
+            ToolTip.visible: hovered
+            ToolTip.text: csName
+            ToolTip.delay: 600
+
+
 
             onPressed: {
                 if (!cmb_From.visible) cmb_From.open()

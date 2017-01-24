@@ -18,6 +18,7 @@ public:
     ChannelStrip(jack_client_t *j_client, const QString& name);
     ~ChannelStrip();
 
+
 public slots:
     jack_port_t* getInputPort1();
     jack_port_t* getInputPort2();
@@ -51,6 +52,11 @@ public slots:
 
     ChannelStrip* getParent();
     void setParent(ChannelStrip* parentChannelStrip);
+
+    uint getColor() const;
+    void setColor(const uint colorValue);
+
+    uint getLevel() const;
 
     void connectFrom(const QString& portName);
     int connectFrom(const QString& portName, const int side);
@@ -90,6 +96,9 @@ private:
     float volR{1.0f};
     float peakL{0.0f};
     float peakR{0.0f};
+
+    uint color{0};
+    uint level{0};
 };
 
 } // namespace Mixr

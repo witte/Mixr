@@ -58,9 +58,11 @@ QVariant ChannelStripModel::data(const QModelIndex &index, int role = Qt::Displa
         case TempMuteRole:  return QVariant::fromValue(item->getTempMute()); break;
         case MuteRole:      return QVariant::fromValue(item->getMute()); break;
         case SoloRole:      return QVariant::fromValue(item->getSolo()); break;
+        case ColorRole:     return QVariant::fromValue(item->getColor()); break;
+        case LevelRole:     return QVariant::fromValue(item->getLevel()); break;
         case ParentRole:
-        case LevelRole:
-        case ColorRole:
+//        case LevelRole:
+//        case ColorRole:
         case VisibleRole:
         case Widgets:
         case ChildrenRole:
@@ -85,9 +87,10 @@ bool ChannelStripModel::setData(const QModelIndex &index, const QVariant &value,
             case TempMuteRole:  item->setTempMute(value.toBool()); sRole = "tempMute"; break;
             case MuteRole:      item->setMute(value.toBool());  sRole = "mute"; break;
             case SoloRole:      item->setSolo(value.toBool());  sRole = "solo"; break;
+            case ColorRole:     item->setColor(value.toUInt()); break;
             case ParentRole:
             case LevelRole:
-            case ColorRole:
+//            case ColorRole:
             case VisibleRole:
             case Widgets:
             case ChildrenRole:
@@ -126,36 +129,43 @@ bool ChannelStripModel::setVolume(int row, const float &value) {
     else return false;
 }
 
+bool ChannelStripModel::setColor (int row, const char &value) { return setData(createIndex(row, 0), value, ColorRole); }
 
 int ChannelStripModel::rowCount() const {
     return m_ChannelStrips.length();
 }
 
-void ChannelStripModel::add(ChannelStrip* channelStrip, ChannelStrip* channelStripParent) {
+//void ChannelStripModel::add(ChannelStrip* channelStrip, ChannelStrip* channelStripParent) {
 
-    if (channelStripParent != nullptr)
-        channelStrip->setParent(channelStripParent);
+//    if (channelStripParent != nullptr)
+//        channelStrip->setParent(channelStripParent);
 
-//    m_ChannelStrips.insert(0, channelStrip);
-}
+////    m_ChannelStrips.insert(0, channelStrip);
+//}
 
-void ChannelStripModel::add(QString channelStripName, QString channelStripParentName) {
+void ChannelStripModel::add(const QString channelStripName, const QString channelStripParentName) {
 
     Mixr::ChannelStrip* m_Channel = new ChannelStrip(jackClient, channelStripName);
 
     m_ChannelStrips.append(m_Channel);
 
     if (channelStripParentName == "") {
-//        qDebug("Setting %s as parent of %s", m_ChannelStrips.first()->getName().toLatin1().data(),
-//               m_Channel->getName().toLatin1().data());
+        // We connect it to the Master CS if no parent is given
         m_Channel->setParent( m_ChannelStrips.first() );
+    }
+    else {
+        Mixr::ChannelStrip* m_ChannelParent = getChannelStripByName(channelStripParentName);
+
+        if (m_ChannelParent != nullptr)
+            m_Channel->setParent(m_ChannelParent);
+
     }
 
     if (channelStripName == "Master") {
         m_Channel->connectTo("system:playback_1", 1);
         m_Channel->connectTo("system:playback_2", 2);
     }
-
+    m_Channel->setColor( (rand() % 8) );
 
 }
 
@@ -191,6 +201,15 @@ int ChannelStripModel::connectFrom(int row, const QString& portName, const int s
 int ChannelStripModel::disconnectFrom(int row, const QString& portName, const int side) {
     ChannelStrip* item = m_ChannelStrips[row];
     return item->disconnectFrom(portName, side);
+}
+
+ChannelStrip* ChannelStripModel::getChannelStripByName(const QString channelStripName) const {
+    for (int i = 0; i < m_ChannelStrips.length(); i++) {
+
+        if (m_ChannelStrips[i]->getName() == channelStripName)
+            return m_ChannelStrips[i];
+    }
+    return nullptr;
 }
 
 static int processChannelStrip (jack_nframes_t nframes, void *arg)

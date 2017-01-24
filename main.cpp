@@ -29,10 +29,20 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "cannot activate client");
     }
 
-    m_Model.add("Master", "nothing");
-    for (int i = 11; i > 0; i--) {
-        m_Model.add(QString().sprintf("Ch %03u", i), "");
-    }
+    m_Model.add("Master", "-");
+//    for (int i = 11; i > 0; i--) {
+//        m_Model.add(QString().sprintf("Ch %03u", i), "");
+//    }
+    m_Model.add("Drums", "Master");
+    m_Model.add("Room", "Drums");
+    m_Model.add("OH", "Drums");
+    m_Model.add("Floor Tom", "Drums");
+    m_Model.add("Tom", "Drums");
+    m_Model.add("Snare", "Drums");
+    m_Model.add("Top", "Snare");
+    m_Model.add("Bottom", "Snare");
+    m_Model.add("Kick", "Drums");
+
 
 
     engine.rootContext()->setContextProperty("MixrModel", &m_Model);
