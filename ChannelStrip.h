@@ -33,11 +33,18 @@ public slots:
     float getPeakR() const;
     void setPeakR(const float peak);
 
+    float getVolume() const;
     float getVolumeL() const;
     float getVolumeR() const;
 
-    bool isMuted() const;
-    void isMuted(const bool isMute);
+    bool getTempMute() const;
+    void setTempMute(const bool tempMuteValue);
+
+    bool getMute() const;
+    void setMute(const bool muteValue);
+
+    bool getSolo() const;
+    void setSolo(const bool soloValue);
 
     float getPan() const;
     void setPan(const float panValue);
@@ -74,7 +81,9 @@ private:
     QString name;
     QStringList port_names{};
 
+    bool tempMute{false};
     bool mute{false};
+    bool solo{false};
     float volume{1.0f};
     float pan{0.5f};
     float volL{1.0f};

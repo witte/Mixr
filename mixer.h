@@ -3,6 +3,7 @@
 
 #include <jack/jack.h>
 #include "ChannelStrip.h"
+#include "ChannelStripModel.h"
 
 namespace Mixr {
 
@@ -21,7 +22,9 @@ public:
     ChannelStrip* channelStrip_04;
     ChannelStrip* channelStrip_05;
 
-    void setCallback();
+//    ChannelStripModel model;
+
+    void setCallback(jack_client_t* callBackJackClient, QList<ChannelStrip*>* callbackChannelStrips);
 
 private:
     void unregisterChannelStripPorts(ChannelStrip* channelStrip);

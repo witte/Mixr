@@ -4,8 +4,8 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     transport.cpp \
-    mixer.cpp \
-    ChannelStrip.cpp
+    ChannelStrip.cpp \
+    ChannelStripModel.cpp
 
 QMAKE_CXXFLAGS += -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -pedantic-errors
 
@@ -23,7 +23,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     transport.h \
-    mixer.h \
-    ChannelStrip.h
+    ChannelStrip.h \
+    ChannelStripModel.h
 
 DISTFILES +=

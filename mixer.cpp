@@ -17,7 +17,7 @@ static int processChannelStrip (jack_nframes_t nframes, void *arg)
     m_ChannelStrip->setPeakL(0.0f);
     m_ChannelStrip->setPeakR(0.0f);
 
-    if (!m_ChannelStrip->isMuted()) {
+    if (!m_ChannelStrip->getMute()) {
         float volL = m_ChannelStrip->getVolumeL();
         float volR = m_ChannelStrip->getVolumeR();
 
@@ -38,22 +38,32 @@ static int processChannelStrip (jack_nframes_t nframes, void *arg)
 }
 
 static int processMixer (jack_nframes_t nframes, void *arg) {
-    Mixer* m_Mixer = (Mixer*)arg;
+//    Mixer* m_Mixer = (Mixer*)arg;
+    QList<ChannelStrip*>* m_list = (QList<ChannelStrip*>*)arg;
 
-    processChannelStrip (nframes, m_Mixer->channelStrip_01);
-    processChannelStrip (nframes, m_Mixer->channelStrip_02);
-    processChannelStrip (nframes, m_Mixer->channelStrip_03);
-    processChannelStrip (nframes, m_Mixer->channelStrip_04);
-    processChannelStrip (nframes, m_Mixer->channelStrip_05);
+//    processChannelStrip (nframes, m_Mixer->channelStrip_01);
+//    processChannelStrip (nframes, m_Mixer->channelStrip_02);
+//    processChannelStrip (nframes, m_Mixer->channelStrip_03);
+//    processChannelStrip (nframes, m_Mixer->channelStrip_04);
+//    processChannelStrip (nframes, m_Mixer->channelStrip_05);
 
-    return 0;
+//    QList<ChannelStrip*> m_list = m_Mixer->model.getChannelStripsList();
+//    for (int i = 0; i < m_list->length(); i++) {
+
+//        processChannelStrip (nframes, m_list[i]);
+
+//    }
+
+
+//    return 0;
 }
 
 
 
 
-void Mixer::setCallback() {
-    jack_set_process_callback (client, processMixer, this);
+void Mixer::setCallback(jack_client_t *callBackJackClient, QList<ChannelStrip*>* callbackChannelStrips) {
+//    jack_set_process_callback (client, processMixer, this);
+    jack_set_process_callback (callBackJackClient, processMixer, callbackChannelStrips);
 }
 
 

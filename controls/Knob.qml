@@ -8,8 +8,8 @@ Dial {
 
     handle.opacity: 0
 
-    from: -1
+    from: 0
     to: 1
-    value: 0
+//    value: 0
 
 }

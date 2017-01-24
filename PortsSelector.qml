@@ -9,7 +9,12 @@ Popup {
     signal s_ConnectPort(string port, bool connect, int side)
     property ListModel model: ListModel {}
 
+    property int centerX: 0
+    property string text: ""
 
+
+    y: -1
+    x: -151 + centerX
     width: 300
     height: (listview.contentHeight > 400) ? 400 : listview.contentHeight
     padding: 2
@@ -18,7 +23,7 @@ Popup {
     Button {
         height: 18
         width: 296
-        text: ""
+        text: control.text
         onClicked: control.close()
     }
 

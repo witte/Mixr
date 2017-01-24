@@ -2,7 +2,6 @@ import QtQuick.Controls 2.0
 import QtQuick 2.7
 
 
-//ItemDelegate {
 MouseArea {
     id: control
 
@@ -10,9 +9,6 @@ MouseArea {
     property bool connected2: false
     property int __midWidth: 150
     property string text: ""
-
-//MouseArea {
-//    id: msa_Control
 
 
     width: 300
@@ -93,4 +89,3 @@ MouseArea {
 
     }
 }
-//}

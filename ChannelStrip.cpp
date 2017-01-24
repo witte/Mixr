@@ -1,17 +1,17 @@
 #include "ChannelStrip.h"
 
-#include <qdebug.h>
+//#include <qdebug.h>
 
 namespace Mixr {
 
-ChannelStrip::ChannelStrip(jack_client_t *clientName, const QString& stripName) :
+ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName) :
     client{clientName},
     name{stripName}
 {
-    input_port_1 = registerPort(name + "in_1", JackPortIsInput);
-    input_port_2 = registerPort(name + "in_2", JackPortIsInput);
-    output_port_1 = registerPort(name + "out_1", JackPortIsOutput);
-    output_port_2 = registerPort(name + "out_2", JackPortIsOutput);
+    input_port_1 = registerPort(name + "_in_1", JackPortIsInput);
+    input_port_2 = registerPort(name + "_in_2", JackPortIsInput);
+    output_port_1 = registerPort(name + "_out_1", JackPortIsOutput);
+    output_port_2 = registerPort(name + "_out_2", JackPortIsOutput);
 }
 
 ChannelStrip::~ChannelStrip()
@@ -58,21 +58,19 @@ void ChannelStrip::setPeakR(const float peak) {
     peakR = peak;
 }
 
-float ChannelStrip::getVolumeL() const {
-    return volL;
-}
+float ChannelStrip::getVolume()     const { return volume; }
+float ChannelStrip::getVolumeL()    const { return volL;   }
+float ChannelStrip::getVolumeR()    const { return volR;   }
 
-float ChannelStrip::getVolumeR() const {
-    return volR;
-}
+bool ChannelStrip::getTempMute()    const { return tempMute; }
+void ChannelStrip::setTempMute(const bool tempMuteValue) { tempMute = tempMuteValue; }
 
-bool ChannelStrip::isMuted() const {
-    return mute;
-}
 
-void ChannelStrip::isMuted(const bool isMute) {
-    mute = isMute;
-}
+bool ChannelStrip::getMute() const { return mute; }
+void ChannelStrip::setMute(const bool muteValue) { mute = muteValue; }
+
+bool ChannelStrip::getSolo() const { return solo; }
+void ChannelStrip::setSolo(const bool soloValue) { solo = soloValue; }
 
 float ChannelStrip::getPan() const {
     return pan;
@@ -90,13 +88,8 @@ ChannelStrip* ChannelStrip::getParent() {
 void ChannelStrip::setParent(ChannelStrip* parentChannelStrip) {
     parent = parentChannelStrip;
 
-//    qDebug("Setting parent: %s -> %s", jackQMixer_port_name(output_port_1), jack_port_name(parent->input_port_1));
-
-//    qDebug("%i", jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) ) );
-//    qDebug("%i", jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) ) );
     jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) );
     jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) );
-
 }
 
 jack_port_t* ChannelStrip::registerPort(const QString& portName, const JackPortFlags portFlags) const {

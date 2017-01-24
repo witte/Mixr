@@ -2,47 +2,44 @@ import QtQuick.Controls 2.0
 import QtQuick 2.7
 
 ApplicationWindow {
+    id: applicationWindow1
     visible: true
 
     minimumHeight: 320
     minimumWidth: 640
     height: 480
-    width: 640
+    width: 1040
 
     header: TransportBar { transport: c_transport }
 
-    Row {
+    Rectangle { anchors.fill: row1; color: "#6e9b6e" }
+
+    ListView {
         id: row1
-        anchors {
-            fill: parent
-            topMargin: 8
-            leftMargin: 2
-            rightMargin: 2
-            bottomMargin: 8
-        }
+        anchors.fill: parent
+        anchors.margins: 4
+//        anchors.leftMargin: 250
+//        anchors.rightMargin: 250
+
         spacing: 2
+        orientation: ListView.Horizontal
+        layoutDirection: ListView.RightToLeft
+        model: MixrModel
 
-        ChannelStrip { c_ChannelStrip: c_ChannelStrip_01 }
+        delegate: ChannelStrip { csModel: row1.model }
 
-        ChannelStrip { c_ChannelStrip: c_ChannelStrip_02 }
 
-        ChannelStrip { c_ChannelStrip: c_ChannelStrip_03 }
+//        Button {
+//            id: btn_AddChannel
 
-        ChannelStrip { c_ChannelStrip: c_ChannelStrip_04 }
+//            anchors.verticalCenter: parent.verticalCenter
 
-        ChannelStrip { c_ChannelStrip: c_ChannelStrip_05 }
+//            height: 22
+//            width: 22
 
-        Button {
-            id: btn_AddChannel
-
-            anchors.verticalCenter: parent.verticalCenter
-
-            height: 22
-            width: 22
-
-            text: "+"
-            enabled: false
-        }
+//            text: "+"
+//            enabled: false
+//        }
 
     }
 
