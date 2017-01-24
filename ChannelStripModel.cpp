@@ -11,7 +11,20 @@ ChannelStripModel::ChannelStripModel(jack_client_t* jackClientName, QObject *par
     jackClient = jackClientName;
 }
 
-ChannelStripModel::~ChannelStripModel() { }
+ChannelStripModel::~ChannelStripModel() {
+    jack_deactivate(jackClient);
+
+    for (int i = 0; i < m_ChannelStrips.length(); i++) {
+
+        jack_port_unregister(jackClient, m_ChannelStrips[i]->getInputPort1());
+        jack_port_unregister(jackClient, m_ChannelStrips[i]->getInputPort2());
+        jack_port_unregister(jackClient, m_ChannelStrips[i]->getOutputPort1());
+        jack_port_unregister(jackClient, m_ChannelStrips[i]->getOutputPort2());
+
+    }
+
+    jack_client_close(jackClient);
+}
 
 QHash<int,QByteArray> ChannelStripModel::roleNames() const // Q_DECL_OVERRIDE
 {

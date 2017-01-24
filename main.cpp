@@ -52,8 +52,6 @@ int main(int argc, char *argv[]) {
 
     return app.exec();
     delete object;
-
-    jack_deactivate(client);
 }
 
 
