@@ -1,10 +1,13 @@
 #include "ChannelStrip.h"
 
+#include <QVector>
+#include <QString>
+//#include <QList>
 //#include <qdebug.h>
 
 namespace Mixr {
 
-ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName) :
+ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName, QObject* parent) : QObject(parent),
     client{clientName},
     name{stripName}
 {
@@ -16,7 +19,6 @@ ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName) 
 
 ChannelStrip::~ChannelStrip()
 {
-
 }
 
 jack_port_t* ChannelStrip::getInputPort1() {
@@ -89,6 +91,28 @@ void ChannelStrip::setParent(ChannelStrip* parentChannelStrip) {
     parent = parentChannelStrip;
     level = parent->level+1;
 
+    QString m_parentColors = "";
+//    QVector<int> array(0);
+//    array.append(color);
+
+    m_parentColors += QString::number(color);
+
+    ChannelStrip* m_parent = parent;
+    while (m_parent != nullptr) {
+
+        if (m_parent->getLevel() > 0) {
+            m_parentColors.append(",");
+            m_parentColors.append( QString::number(m_parent->color) );
+
+        }
+
+        m_parent = m_parent->parent;
+    }
+
+    parentColors = m_parentColors;
+//    qDebug("from c++: %s", m_parentColors.toLatin1().data());
+
+
     jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parent->input_port_1) );
     jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parent->input_port_2) );
 }
@@ -99,10 +123,17 @@ uint ChannelStrip::getColor() const {
 
 void ChannelStrip::setColor(const uint colorValue) {
     color = colorValue;
+
+    if (parentColors == "") parentColors = QString::number(color);;
 }
 
 uint ChannelStrip::getLevel() const {
     return level;
+}
+
+//QVector<int> ChannelStrip::getParentColors() const {
+QString ChannelStrip::getParentColors() const {
+    return parentColors;
 }
 
 jack_port_t* ChannelStrip::registerPort(const QString& portName, const JackPortFlags portFlags) const {

@@ -1,12 +1,14 @@
 #include "ChannelStripModel.h"
 #include "ChannelStrip.h"
 
+#include <QQmlEngine>
+
 #include "mixer.h"
 
 namespace Mixr {
 
 
-ChannelStripModel::ChannelStripModel(jack_client_t* jackClientName, QObject *parent) : QAbstractListModel(parent)
+ChannelStripModel::ChannelStripModel(jack_client_t* jackClientName, QObject* parent) : QAbstractListModel(parent)
 {
     jackClient = jackClientName;
 }
@@ -29,18 +31,19 @@ ChannelStripModel::~ChannelStripModel() {
 QHash<int,QByteArray> ChannelStripModel::roleNames() const // Q_DECL_OVERRIDE
 {
      QHash<int, QByteArray> result;
-     result.insert(NameRole,     QByteArrayLiteral("csName"));
-     result.insert(PanRole,      QByteArrayLiteral("csPan"));
-     result.insert(VolumeRole,   QByteArrayLiteral("csVolume"));
-     result.insert(TempMuteRole, QByteArrayLiteral("csTempMute"));
-     result.insert(MuteRole,     QByteArrayLiteral("csMute"));
-     result.insert(SoloRole,     QByteArrayLiteral("csSolo"));
-     result.insert(ParentRole,   QByteArrayLiteral("csParent"));
-     result.insert(LevelRole,    QByteArrayLiteral("csLevel"));
-     result.insert(ColorRole,    QByteArrayLiteral("csColor"));
-     result.insert(VisibleRole,  QByteArrayLiteral("csVisible"));
-     result.insert(Widgets,      QByteArrayLiteral("csWidgets"));
-     result.insert(ChildrenRole, QByteArrayLiteral("csChildren"));
+     result.insert(NameRole,      QByteArrayLiteral("csName"));
+     result.insert(PanRole,          QByteArrayLiteral("csPan"));
+     result.insert(VolumeRole,       QByteArrayLiteral("csVolume"));
+     result.insert(TempMuteRole,     QByteArrayLiteral("csTempMute"));
+     result.insert(MuteRole,         QByteArrayLiteral("csMute"));
+     result.insert(SoloRole,         QByteArrayLiteral("csSolo"));
+     result.insert(ParentRole,       QByteArrayLiteral("csParent"));
+     result.insert(LevelRole,        QByteArrayLiteral("csLevel"));
+     result.insert(ColorRole,        QByteArrayLiteral("csColor"));
+     result.insert(ParentColorsRole, QByteArrayLiteral("csParentColors"));
+     result.insert(VisibleRole,      QByteArrayLiteral("csVisible"));
+     result.insert(Widgets,          QByteArrayLiteral("csWidgets"));
+     result.insert(ChildrenRole,     QByteArrayLiteral("csChildren"));
      return result;
 }
 
@@ -49,20 +52,18 @@ QVariant ChannelStripModel::data(const QModelIndex &index, int role = Qt::Displa
     if (!index.isValid())
         return QVariant();
 
-    const ChannelStrip* item = m_ChannelStrips[index.row()];
+    ChannelStrip* item = m_ChannelStrips[index.row()];
 
     switch (role) {
-        case NameRole:      return QVariant::fromValue(item->getName()); break;
-        case PanRole:       return QVariant::fromValue(item->getPan()); break;
-        case VolumeRole:    return QVariant::fromValue(item->getVolume()); break;
-        case TempMuteRole:  return QVariant::fromValue(item->getTempMute()); break;
-        case MuteRole:      return QVariant::fromValue(item->getMute()); break;
-        case SoloRole:      return QVariant::fromValue(item->getSolo()); break;
-        case ColorRole:     return QVariant::fromValue(item->getColor()); break;
-        case LevelRole:     return QVariant::fromValue(item->getLevel()); break;
-        case ParentRole:
-//        case LevelRole:
-//        case ColorRole:
+        case NameRole:          return QVariant::fromValue(item->getName()); break;
+        case PanRole:           return QVariant::fromValue(item->getPan()); break;
+        case VolumeRole:        return QVariant::fromValue(item->getVolume()); break;
+        case TempMuteRole:      return QVariant::fromValue(item->getTempMute()); break;
+        case MuteRole:          return QVariant::fromValue(item->getMute()); break;
+        case SoloRole:          return QVariant::fromValue(item->getSolo()); break;
+        case LevelRole:         return QVariant::fromValue(item->getLevel()); break;
+        case ColorRole:         return QVariant::fromValue(item->getColor()); break;
+        case ParentColorsRole:  return QVariant::fromValue(item->getParentColors()); break;
         case VisibleRole:
         case Widgets:
         case ChildrenRole:
@@ -90,7 +91,6 @@ bool ChannelStripModel::setData(const QModelIndex &index, const QVariant &value,
             case ColorRole:     item->setColor(value.toUInt()); break;
             case ParentRole:
             case LevelRole:
-//            case ColorRole:
             case VisibleRole:
             case Widgets:
             case ChildrenRole:
@@ -113,18 +113,8 @@ bool ChannelStripModel::setVolume(int row, const float &value) {
     if ( (row >= 0) && (row < m_ChannelStrips.length()) ) {
 
         setData(createIndex(row, 0), value, VolumeRole);
-
-        // We'll use this to get information from the parent channels, to make their children look
-        // indented even if they're not a hierarchy in the model
-
-//        ChannelStrip *item = m_ChannelStrips[row];
-//        if (item->getParent() != nullptr) {
-
-//            int m_parentIndex = m_ChannelStrips.indexOf(item->getParent());
-//            setData(createIndex(m_parentIndex, 0), value, PanRole);
-//        }
-
         return true;
+
     }
     else return false;
 }
@@ -145,9 +135,15 @@ int ChannelStripModel::rowCount() const {
 
 void ChannelStripModel::add(const QString channelStripName, const QString channelStripParentName) {
 
-    Mixr::ChannelStrip* m_Channel = new ChannelStrip(jackClient, channelStripName);
+    m_ChannelStrips.append(new ChannelStrip(jackClient, channelStripName));
 
-    m_ChannelStrips.append(m_Channel);
+
+    Mixr::ChannelStrip* m_Channel = m_ChannelStrips.last();
+    QQmlEngine::setObjectOwnership(m_ChannelStrips.last(), QQmlEngine::CppOwnership);
+
+
+    m_Channel->setColor( (rand() % 8) );
+
 
     if (channelStripParentName == "") {
         // We connect it to the Master CS if no parent is given
@@ -165,7 +161,7 @@ void ChannelStripModel::add(const QString channelStripName, const QString channe
         m_Channel->connectTo("system:playback_1", 1);
         m_Channel->connectTo("system:playback_2", 2);
     }
-    m_Channel->setColor( (rand() % 8) );
+
 
 }
 
@@ -204,10 +200,13 @@ int ChannelStripModel::disconnectFrom(int row, const QString& portName, const in
 }
 
 ChannelStrip* ChannelStripModel::getChannelStripByName(const QString channelStripName) const {
+
     for (int i = 0; i < m_ChannelStrips.length(); i++) {
 
-        if (m_ChannelStrips[i]->getName() == channelStripName)
+        if (m_ChannelStrips[i]->getName() == channelStripName) {
+
             return m_ChannelStrips[i];
+        }
     }
     return nullptr;
 }
@@ -249,7 +248,7 @@ static int processChannelStrip (jack_nframes_t nframes, void *arg)
 static int processMixer (jack_nframes_t nframes, void *arg) {
     QList<ChannelStrip*>* m_list = (QList<ChannelStrip*>*)arg;
 
-    for (int i = 0; i < m_list->length(); i++) {
+    for (int i = m_list->length()-1; i >= 0; i--) {
 
         processChannelStrip (nframes, m_list->at(i));
 

@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QString>
+#include <QVector>
+//#include <QList>
 
 #include <jack/jack.h>
 
@@ -15,9 +17,8 @@ class ChannelStrip : public QObject
     Q_OBJECT
 
 public:
-    ChannelStrip(jack_client_t *j_client, const QString& name);
+    ChannelStrip(jack_client_t* clientName, const QString& stripName, QObject* parent = 0);
     ~ChannelStrip();
-
 
 public slots:
     jack_port_t* getInputPort1();
@@ -58,6 +59,9 @@ public slots:
 
     uint getLevel() const;
 
+//    QVector<int> getParentColors() const;
+    QString getParentColors() const;
+
     void connectFrom(const QString& portName);
     int connectFrom(const QString& portName, const int side);
     int disconnectFrom(const QString& portName, const int side);
@@ -67,6 +71,8 @@ public slots:
     void setVolume(const float volumeValue);
     QStringList getJackInputPorts();
     QStringList getJackOutputPorts();
+
+
 
 private:
     jack_port_t* registerPort(const QString& name, const JackPortFlags portFlags) const;
@@ -82,10 +88,12 @@ private:
     jack_port_t *output_port_1{nullptr};
     jack_port_t *output_port_2{nullptr};
 
-    ChannelStrip *parent{nullptr};
+    ChannelStrip* parent{nullptr};
 
     QString name;
     QStringList port_names{};
+
+    QString parentColors;
 
     bool tempMute{false};
     bool mute{false};

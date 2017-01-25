@@ -13,6 +13,8 @@ ApplicationWindow {
 
     header: TransportBar { transport: c_transport }
 
+//    background: Rectangle { color: "#f5f5f5" }
+
     ListView {
         id: row1
         anchors.fill: parent
@@ -22,13 +24,13 @@ ApplicationWindow {
 //        anchors.leftMargin: 250
 //        anchors.rightMargin: 250
 
-        spacing: 2
         orientation: ListView.Horizontal
         layoutDirection: ListView.RightToLeft
         model: MixrModel
 
-        delegate: ChannelStrip { csModel: row1.model }
+        cacheBuffer: 2000
 
+        delegate: ChannelStrip { csModel: MixrModel }
 
 //        Button {
 //            id: btn_AddChannel

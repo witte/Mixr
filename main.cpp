@@ -23,6 +23,10 @@ int main(int argc, char *argv[]) {
     }
 
     Mixr::ChannelStripModel m_Model(client);
+
+    QQmlEngine::setObjectOwnership(&m_Model, QQmlEngine::CppOwnership);
+
+
     m_Model.setCallback(client);
 
     if (jack_activate (client)) {
@@ -30,10 +34,24 @@ int main(int argc, char *argv[]) {
     }
 
     m_Model.add("Master", "-");
-//    for (int i = 11; i > 0; i--) {
-//        m_Model.add(QString().sprintf("Ch %03u", i), "");
-//    }
-    m_Model.add("Drums", "Master");
+
+    m_Model.add("VOICE", "Master");
+
+    m_Model.add("Dry", "VOICE");
+    m_Model.add("FX", "VOICE");
+    m_Model.add("Chorus", "VOICE");
+    m_Model.add("__1", "Chorus");
+    m_Model.add("__2", "__1");
+    m_Model.add("__3", "__2");
+    m_Model.add("__4", "__3");
+    m_Model.add("__5", "__4");
+    m_Model.add("__6", "__5");
+    m_Model.add("__7", "__6");
+
+
+    m_Model.add("DRUMS", "Master");
+
+    m_Model.add("Drums", "DRUMS");
     m_Model.add("Room", "Drums");
     m_Model.add("OH", "Drums");
     m_Model.add("Floor Tom", "Drums");
@@ -43,9 +61,20 @@ int main(int argc, char *argv[]) {
     m_Model.add("Bottom", "Snare");
     m_Model.add("Kick", "Drums");
 
+    m_Model.add("Percussion", "DRUMS");
+    m_Model.add("Cowbell", "Percussion");
+    m_Model.add("Shaker", "Percussion");
+
+
+//    for (int i = 300; i > 0; i--) {
+//        m_Model.add(QString().sprintf("Ch %03u", i), "");
+//    }
+
 
 
     engine.rootContext()->setContextProperty("MixrModel", &m_Model);
+//    QVariant::fromValue(dataList)
+//    engine.rootContext()->
 
 
     Mixr::Transport m_transport(client);
@@ -55,6 +84,7 @@ int main(int argc, char *argv[]) {
     QQmlComponent component(&engine, QUrl(QLatin1String("qrc:/main.qml")));
     QObject* object = component.create();
 
+    QQmlEngine::setObjectOwnership(&m_Model, QQmlEngine::CppOwnership);
 
     return app.exec();
     delete object;

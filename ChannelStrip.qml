@@ -8,31 +8,30 @@ ItemDelegate {
     id: control
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    anchors.bottomMargin: 8 * (csLevel + 1)
-    width: 82
+    width: 81
 
     property QtObject csModel
 
     background: Rectangle {
-        anchors.fill: parent
-        color: "#eee"
+        anchors.fill: mst_Channel
+        anchors.bottomMargin: -4
+        color: "#f0f0f0"//"#eee"
     }
 
     Item {
         id: mst_Channel
-        width: 82
+        width: 80
         anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
+        anchors.bottom: ldr_BottomSpacer.top
 
 
         Button {
             id: btn_From
             anchors.top: parent.top
             anchors.topMargin: 1
-            height: 20
-            width: 80
             x: 1
+            height: 20
+            width: 78
             text: csName
 
 
@@ -101,7 +100,6 @@ ItemDelegate {
             anchors.bottom: sld_Volume.top
 
             value: csPan
-
             onPositionChanged: {
                 if (csPan !== knb_Pan.position)
                     csModel.setPan( index, knb_Pan.position )
@@ -114,6 +112,8 @@ ItemDelegate {
             anchors.bottom: rowLayout1.top
 
             value: csVolume
+//            onValueChanged: { console.log( csName + " changed" ); return false }
+
             onPositionChanged: {
                 if (csVolume !== sld_Volume.position)
                     csModel.setVolume( index, sld_Volume.position )
@@ -143,4 +143,34 @@ ItemDelegate {
 
     }
 
+    Loader {
+        id: ldr_BottomSpacer
+        anchors.bottom: parent.bottom
+
+        sourceComponent: spc_Parents
+    }
+
+    Component {
+        id: spc_Parents
+        Item {
+            id: rct_parentColors
+            height: (8 * (csLevel))
+
+            Repeater {
+                model: csParentColors.toString().split(",")
+
+                Rectangle {
+                    y: (8 * index)
+//                    x: (index === 0) ? 1 : 0
+                    width: (index === 0) ? 80 : 81
+//                    width: 80
+                    height: 6
+
+                    color: StyleDefault.csColors[ modelData ].bgColor
+
+//                    Component.onCompleted: console.log(modelData)
+                }
+            }
+        }
+    }
 }
