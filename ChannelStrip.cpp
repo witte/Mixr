@@ -1,10 +1,5 @@
 #include "ChannelStrip.h"
 
-//#include <QVector>
-//#include <QString>
-//#include <QList>
-//#include <qdebug.h>
-
 namespace Mixr {
 
 ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName, QObject* parentObj) : QObject(parentObj),
@@ -15,15 +10,6 @@ ChannelStrip::ChannelStrip(jack_client_t* clientName, const QString& stripName, 
     input_port_2 = registerPort(name + "_in_2", JackPortIsInput);
     output_port_1 = registerPort(name + "_out_1", JackPortIsOutput);
     output_port_2 = registerPort(name + "_out_2", JackPortIsOutput);
-
-    if ( (input_port_1 == nullptr)  ||
-         (input_port_2 == nullptr)  ||
-         (output_port_1 == nullptr) ||
-         (output_port_2 == nullptr) ) {
-
-        qDebug("Could not register ports from %s", stripName.toLatin1().data());
-    }
-
 }
 
 ChannelStrip::~ChannelStrip() { }
@@ -117,8 +103,6 @@ void ChannelStrip::setParent(ChannelStrip* newParentChannelStrip) {
     }
 
     parentColors = m_parentColors;
-//    qDebug("from c++: %s", m_parentColors.toLatin1().data());
-
 
     jack_connect ( client, jack_port_name(output_port_1), jack_port_name(parentChannelStrip->input_port_1) );
     jack_connect ( client, jack_port_name(output_port_2), jack_port_name(parentChannelStrip->input_port_2) );

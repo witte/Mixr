@@ -17,5 +17,6 @@
         <file>img/port-off.svg</file>
         <file>img/port-on.svg</file>
         <file>ChannelStrip.qml</file>
+        <file>img/ButtonOverlay.png</file>
     </qresource>
 </RCC>

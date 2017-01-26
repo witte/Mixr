@@ -25,7 +25,7 @@ ApplicationWindow {
         layoutDirection: ListView.RightToLeft
         model: MixrModel
 
-        cacheBuffer: 0
+        cacheBuffer: 1000
 
         delegate: ChannelStrip { csModel: MixrModel }
 

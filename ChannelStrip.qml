@@ -38,6 +38,14 @@ ItemDelegate {
             background: Rectangle {
                 color: StyleDefault.csColors[csColor].bgColor
                 opacity: enabled ? 1 : 0.3
+
+//                Image {
+//                    id: name
+//                    source: "img/ButtonOverlay.png"
+//                    width: parent.width
+////                    opacity: (index % 2) ? 0.3 : 0
+//                    opacity: 0.2
+//                }
             }
 
 

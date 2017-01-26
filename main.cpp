@@ -58,9 +58,9 @@ int main(int argc, char *argv[]) {
 
     // For testing purposes, make sure that the jack server is configured to allow that many ports!
     // (each channelstrip creates 4 ports)
-    for (int i = 150; i > 0; i--) {
-        m_Model->add(QString().sprintf("Ch %03u", i), "", &app);
-    }
+//    for (int i = 750; i > 0; i--) {
+//        m_Model->add(QString().sprintf("Ch %03u", i), "", &app);
+//    }
 
 
     engine.rootContext()->setContextProperty("MixrModel", m_Model);
