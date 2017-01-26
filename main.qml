@@ -11,15 +11,11 @@ ApplicationWindow {
     height: 480
     width: 1040
 
-    header: TransportBar { transport: c_transport }
-
-//    background: Rectangle { color: "#f5f5f5" }
-
     ListView {
         id: row1
         anchors.fill: parent
         anchors.margins: 4
-        anchors.bottomMargin: 8
+        anchors.bottomMargin: 12
 
 //        Uncomment these to see how Qt handles the delegates creation and destruction
 //        anchors.leftMargin: 250
@@ -50,10 +46,9 @@ ApplicationWindow {
     ScrollBar {
         id: scr_Bottom
         orientation: Qt.Horizontal
-
         anchors.bottom: parent.bottom
-
+        anchors.bottomMargin: 2
     }
 
-    footer: Rectangle { height: 8; color: "#7ca28c" }
+    footer: TransportBar { transport: c_transport }
 }
