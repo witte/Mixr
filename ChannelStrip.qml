@@ -49,23 +49,19 @@ ItemDelegate {
             }
 
 
-            hoverEnabled: true
-            ToolTip.visible: hovered
-            ToolTip.text: csName
-            ToolTip.delay: 600
-
-
 
             onPressed: {
-                if (!cmb_From.visible) cmb_From.open()
+                if (!cmb_From.visible) {
 
-                var mdl_Source = csModel.getJackOutputPorts()
-                var mdl_Sorted = portsModel.createObject(this);
+                    var mdl_Source = csModel.getJackOutputPorts()
+                    var mdl_Sorted = portsModel.createObject(this);
 
-                for (var i = 0; i < mdl_Source.length; i++)
-                    mdl_Sorted.append(  {"portName": mdl_Source[i]}  )
+                    for (var i = 0; i < mdl_Source.length; i++)
+                        mdl_Sorted.append(  {"portName": mdl_Source[i]}  )
 
-                cmb_From.model = mdl_Sorted
+                    cmb_From.model = mdl_Sorted
+                    cmb_From.open()
+                }
             }
 
             Component {  id: portsModel; ListModel { }  }
@@ -84,7 +80,6 @@ ItemDelegate {
                         csModel.disconnectFrom(index, port, side)
 
                 }
-
             }
         }
 
@@ -102,7 +97,7 @@ ItemDelegate {
             value: csPan
             onPositionChanged: {
                 if (csPan !== knb_Pan.position)
-                    csModel.setPan( index, knb_Pan.position )
+                    csModel.setPan(index, knb_Pan.position)
             }
 
         }
@@ -112,11 +107,10 @@ ItemDelegate {
             anchors.bottom: rowLayout1.top
 
             value: csVolume
-//            onValueChanged: { console.log( csName + " changed" ); return false }
 
             onPositionChanged: {
                 if (csVolume !== sld_Volume.position)
-                    csModel.setVolume( index, sld_Volume.position )
+                    csModel.setVolume(index, sld_Volume.position)
             }
         }
 
@@ -131,7 +125,7 @@ ItemDelegate {
                 text: "M"
                 onClicked: {
                     if (csMute !== this.checked)
-                        csModel.setMute( index, this.checked )
+                        csModel.setMute(index, this.checked)
 
                 }
 
@@ -154,21 +148,17 @@ ItemDelegate {
         id: spc_Parents
         Item {
             id: rct_parentColors
-            height: (8 * (csLevel))
+            height: (8 * csLevel)
 
             Repeater {
                 model: csParentColors.toString().split(",")
 
                 Rectangle {
                     y: (8 * index)
-//                    x: (index === 0) ? 1 : 0
                     width: (index === 0) ? 80 : 81
-//                    width: 80
                     height: 6
 
                     color: StyleDefault.csColors[ modelData ].bgColor
-
-//                    Component.onCompleted: console.log(modelData)
                 }
             }
         }

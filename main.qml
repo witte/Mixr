@@ -19,6 +19,7 @@ ApplicationWindow {
         id: row1
         anchors.fill: parent
         anchors.margins: 4
+        anchors.bottomMargin: 8
 
 //        Uncomment these to see how Qt handles the delegates creation and destruction
 //        anchors.leftMargin: 250
@@ -28,7 +29,7 @@ ApplicationWindow {
         layoutDirection: ListView.RightToLeft
         model: MixrModel
 
-        cacheBuffer: 2000
+        cacheBuffer: 0
 
         delegate: ChannelStrip { csModel: MixrModel }
 
@@ -43,6 +44,14 @@ ApplicationWindow {
 //            text: "+"
 //            enabled: false
 //        }
+        ScrollBar.horizontal: scr_Bottom
+
+    }
+    ScrollBar {
+        id: scr_Bottom
+        orientation: Qt.Horizontal
+
+        anchors.bottom: parent.bottom
 
     }
 

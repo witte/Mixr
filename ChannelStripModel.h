@@ -46,7 +46,8 @@ public:
 
     ChannelStrip* getChannelStripByName(const QString channelStripName) const;
 
-    void add(const QString channelStripName, const QString channelStripParentName);
+//    void add(ChannelStrip* channelStrip, const QString channelStripParentName, QObject* csParent);
+    void add(const QString channelStripName, const QString channelStripParentName, QObject* csParent);
 
     void setCallback(jack_client_t* callBackJackClient);
     jack_client_t* jackClient;

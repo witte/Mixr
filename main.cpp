@@ -3,8 +3,10 @@
 #include <QQmlApplicationEngine>
 #include <QQmlComponent>
 #include <QQmlContext>
+#include <QThread>
 
 #include "ChannelStripModel.h"
+#include "ChannelStrip.h"
 #include "transport.h"
 
 jack_client_t* client;
@@ -22,59 +24,46 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Mixr::ChannelStripModel m_Model(client);
+    Mixr::ChannelStripModel* m_Model = new Mixr::ChannelStripModel(client, &app);
 
-    QQmlEngine::setObjectOwnership(&m_Model, QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_Model, QQmlEngine::CppOwnership);
 
 
-    m_Model.setCallback(client);
+    m_Model->setCallback(client);
 
     if (jack_activate (client)) {
         fprintf(stderr, "cannot activate client");
     }
 
-    m_Model.add("Master", "-");
+    m_Model->add("Master", "-", &app);
 
-    m_Model.add("VOICE", "Master");
+    m_Model->add("VOICE", "Master", &app);
+        m_Model->add("Dry", "VOICE", &app);
+        m_Model->add("FX", "VOICE", &app);
 
-    m_Model.add("Dry", "VOICE");
-    m_Model.add("FX", "VOICE");
-    m_Model.add("Chorus", "VOICE");
-    m_Model.add("__1", "Chorus");
-    m_Model.add("__2", "__1");
-    m_Model.add("__3", "__2");
-    m_Model.add("__4", "__3");
-    m_Model.add("__5", "__4");
-    m_Model.add("__6", "__5");
-    m_Model.add("__7", "__6");
+    m_Model->add("DRUMS", "Master", &app);
+        m_Model->add("Drums", "DRUMS", &app);
+            m_Model->add("Room", "Drums", &app);
+            m_Model->add("OH", "Drums", &app);
+            m_Model->add("Floor Tom", "Drums", &app);
+            m_Model->add("Tom", "Drums", &app);
+            m_Model->add("Snare", "Drums", &app);
+            m_Model->add("Top", "Snare", &app);
+            m_Model->add("Bottom", "Snare", &app);
+            m_Model->add("Kick", "Drums", &app);
 
+        m_Model->add("Percussion", "DRUMS", &app);
+            m_Model->add("Cowbell", "Percussion", &app);
+            m_Model->add("Shaker", "Percussion", &app);
 
-    m_Model.add("DRUMS", "Master");
-
-    m_Model.add("Drums", "DRUMS");
-    m_Model.add("Room", "Drums");
-    m_Model.add("OH", "Drums");
-    m_Model.add("Floor Tom", "Drums");
-    m_Model.add("Tom", "Drums");
-    m_Model.add("Snare", "Drums");
-    m_Model.add("Top", "Snare");
-    m_Model.add("Bottom", "Snare");
-    m_Model.add("Kick", "Drums");
-
-    m_Model.add("Percussion", "DRUMS");
-    m_Model.add("Cowbell", "Percussion");
-    m_Model.add("Shaker", "Percussion");
-
-
-//    for (int i = 300; i > 0; i--) {
-//        m_Model.add(QString().sprintf("Ch %03u", i), "");
+    // For testing purposes, make sure that the jack server is configured to allow that many ports!
+    // (each channelstrip creates 4 ports)
+//    for (int i = 750; i > 0; i--) {
+//        m_Model->add(QString().sprintf("Ch %03u", i), "", &app);
 //    }
 
 
-
-    engine.rootContext()->setContextProperty("MixrModel", &m_Model);
-//    QVariant::fromValue(dataList)
-//    engine.rootContext()->
+    engine.rootContext()->setContextProperty("MixrModel", m_Model);
 
 
     Mixr::Transport m_transport(client);
@@ -84,7 +73,7 @@ int main(int argc, char *argv[]) {
     QQmlComponent component(&engine, QUrl(QLatin1String("qrc:/main.qml")));
     QObject* object = component.create();
 
-    QQmlEngine::setObjectOwnership(&m_Model, QQmlEngine::CppOwnership);
+    QQmlEngine::setObjectOwnership(m_Model, QQmlEngine::CppOwnership);
 
     return app.exec();
     delete object;

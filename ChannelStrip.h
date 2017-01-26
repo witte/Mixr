@@ -2,8 +2,8 @@
 #define FADER_H
 
 #include <QObject>
-#include <QString>
-#include <QVector>
+//#include <QString>
+//#include <QVector>
 //#include <QList>
 
 #include <jack/jack.h>
@@ -17,7 +17,7 @@ class ChannelStrip : public QObject
     Q_OBJECT
 
 public:
-    ChannelStrip(jack_client_t* clientName, const QString& stripName, QObject* parent = 0);
+    explicit ChannelStrip(jack_client_t* clientName, const QString& stripName, QObject* parentObj = 0);
     ~ChannelStrip();
 
 public slots:
@@ -88,7 +88,7 @@ private:
     jack_port_t *output_port_1{nullptr};
     jack_port_t *output_port_2{nullptr};
 
-    ChannelStrip* parent{nullptr};
+    ChannelStrip* parentChannelStrip{nullptr};
 
     QString name;
     QStringList port_names{};
