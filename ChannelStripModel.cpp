@@ -2,6 +2,7 @@
 #include "ChannelStrip.h"
 
 #include <QQmlEngine>
+#include <random>
 
 #include "mixer.h"
 
@@ -112,6 +113,46 @@ int ChannelStripModel::rowCount() const {
     return m_ChannelStrips.length();
 }
 
+void ChannelStripModel::addRandom(const QString channelStripName, QObject* csParent) {
+
+
+    Mixr::ChannelStrip* m_Channel = new ChannelStrip(jackClient, channelStripName, csParent);
+    QQmlEngine::setObjectOwnership(m_Channel, QQmlEngine::CppOwnership);
+    m_ChannelStrips.append(m_Channel);
+
+
+    std::default_random_engine eng((std::random_device())());
+
+    std::uniform_real_distribution<float> fdis(0, 1.0);
+    m_Channel->setPan( fdis(eng) );
+    m_Channel->setVolume( fdis(eng) );
+
+    std::uniform_int_distribution<int> iidis(0, 7);
+    m_Channel->setColor( iidis(eng) );
+
+
+    std::uniform_int_distribution<int> idis(0, 100);
+
+    const int a = idis(eng);
+
+    Mixr::ChannelStrip* m_ChannelParent;
+    if (a > 35) {
+
+        m_ChannelParent = m_ChannelStrips[ m_ChannelStrips.length()-2 ];
+        m_Channel->setParent( m_ChannelParent );
+    }
+    else
+        m_Channel->setParent( m_ChannelStrips.first() );
+
+
+
+
+    if (channelStripName == "Master") {
+        m_Channel->connectTo("system:playback_1", 1);
+        m_Channel->connectTo("system:playback_2", 2);
+    }
+}
+
 void ChannelStripModel::add(const QString channelStripName, const QString channelStripParentName, QObject* csParent) {
 
     Mixr::ChannelStrip* m_Channel = new ChannelStrip(jackClient, channelStripName, csParent);
@@ -160,6 +201,9 @@ QStringList ChannelStripModel::getJackOutputPorts() {
     }
 
     jack_free(ports);
+
+//    QStringListModel* m_model{};
+//    return QVariant::fromValue( m_model );
 
     return a;
 }

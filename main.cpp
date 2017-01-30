@@ -9,6 +9,7 @@
 #include "ChannelStrip.h"
 #include "transport.h"
 
+
 jack_client_t* client;
 
 
@@ -37,30 +38,36 @@ int main(int argc, char *argv[]) {
 
     m_Model->add("Master", "-", &app);
 
-    m_Model->add("VOICE", "Master", &app);
-        m_Model->add("Dry", "VOICE", &app);
-        m_Model->add("FX", "VOICE", &app);
+//    m_Model->add("VOICE", "Master", &app);
+//        m_Model->add("Dry", "VOICE", &app);
+//        m_Model->add("FX", "VOICE", &app);
 
-    m_Model->add("DRUMS", "Master", &app);
-        m_Model->add("Drums", "DRUMS", &app);
-            m_Model->add("Room", "Drums", &app);
-            m_Model->add("OH", "Drums", &app);
-            m_Model->add("Floor Tom", "Drums", &app);
-            m_Model->add("Tom", "Drums", &app);
-            m_Model->add("Snare", "Drums", &app);
-            m_Model->add("Top", "Snare", &app);
-            m_Model->add("Bottom", "Snare", &app);
-            m_Model->add("Kick", "Drums", &app);
+//    m_Model->add("DRUMS", "Master", &app);
+//        m_Model->add("Drums", "DRUMS", &app);
+//            m_Model->add("Room", "Drums", &app);
+//            m_Model->add("OH", "Drums", &app);
+//            m_Model->add("Floor Tom", "Drums", &app);
+//            m_Model->add("Tom", "Drums", &app);
+//            m_Model->add("Snare", "Drums", &app);
+//            m_Model->add("Top", "Snare", &app);
+//            m_Model->add("Bottom", "Snare", &app);
+//            m_Model->add("Kick", "Drums", &app);
 
-        m_Model->add("Percussion", "DRUMS", &app);
-            m_Model->add("Cowbell", "Percussion", &app);
-            m_Model->add("Shaker", "Percussion", &app);
+//        m_Model->add("Percussion", "DRUMS", &app);
+//            m_Model->add("Cowbell", "Percussion", &app);
+//            m_Model->add("Shaker", "Percussion", &app);
+
+
+
 
     // For testing purposes, make sure that the jack server is configured to allow that many ports!
     // (each channelstrip creates 4 ports)
-//    for (int i = 750; i > 0; i--) {
-//        m_Model->add(QString().sprintf("Ch %03u", i), "", &app);
-//    }
+    for (int i = 10; i > 0; i--) {
+
+//        m_Model->setData(  );
+        m_Model->addRandom(QString().sprintf("Ch %03u", i), &app);
+
+    }
 
 
     engine.rootContext()->setContextProperty("MixrModel", m_Model);

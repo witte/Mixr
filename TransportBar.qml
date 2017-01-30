@@ -43,6 +43,7 @@ Item {
             Image {
                 x: btn_Start.checked ? 6 : 7
                 y: 6
+                opacity: 0.6
                 source: btn_Start.checked ? "../img/media-playback-pause-symbolic.svg" : "../img/media-playback-start-symbolic.svg"
             }
 

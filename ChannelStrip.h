@@ -2,9 +2,6 @@
 #define FADER_H
 
 #include <QObject>
-//#include <QString>
-//#include <QVector>
-//#include <QList>
 
 #include <jack/jack.h>
 
@@ -59,7 +56,6 @@ public slots:
 
     uint getLevel() const;
 
-//    QVector<int> getParentColors() const;
     QString getParentColors() const;
 
     void connectFrom(const QString& portName);

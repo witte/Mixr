@@ -5,6 +5,8 @@
 #include <QVariant>
 #include <QList>
 
+#include <QStringList>
+
 #include "ChannelStrip.h"
 
 namespace Mixr {
@@ -41,11 +43,13 @@ public:
     Q_INVOKABLE bool setMute  (int row, const bool  &value);
     Q_INVOKABLE bool setColor (int row, const char  &value);
     Q_INVOKABLE QStringList getJackOutputPorts();
+
     Q_INVOKABLE int connectFrom(int row, const QString& portName, const int side);
     Q_INVOKABLE int disconnectFrom(int row, const QString& portName, const int side);
 
     ChannelStrip* getChannelStripByName(const QString channelStripName) const;
 
+    void addRandom(const QString channelStripName, QObject* csParent);
     void add(const QString channelStripName, const QString channelStripParentName, QObject* csParent);
 
     void setCallback(jack_client_t* callBackJackClient);

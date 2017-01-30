@@ -1,3 +1,5 @@
+QT_VERSION = 5
+
 QT += qml quick
 
 CONFIG += c++11

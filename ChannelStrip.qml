@@ -15,7 +15,7 @@ ItemDelegate {
     background: Rectangle {
         anchors.fill: mst_Channel
         anchors.bottomMargin: -4
-        color: "#f0f0f0"//"#eee"
+        color: "#f0f0f0"
     }
 
     Item {
@@ -38,14 +38,6 @@ ItemDelegate {
             background: Rectangle {
                 color: StyleDefault.csColors[csColor].bgColor
                 opacity: enabled ? 1 : 0.3
-
-//                Image {
-//                    id: name
-//                    source: "img/ButtonOverlay.png"
-//                    width: parent.width
-////                    opacity: (index % 2) ? 0.3 : 0
-//                    opacity: 0.2
-//                }
             }
 
 
@@ -55,7 +47,6 @@ ItemDelegate {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
-
 
 
             onPressed: {
@@ -92,11 +83,11 @@ ItemDelegate {
         }
 
 
-        Text {
-            anchors.top: btn_From.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: "+"
-        }
+//        Text {
+//            anchors.top: btn_From.bottom
+//            anchors.horizontalCenter: parent.horizontalCenter
+//            text: "+"
+//        }
 
         Controls.Knob {
             id: knb_Pan
@@ -107,7 +98,6 @@ ItemDelegate {
                 if (csPan !== knb_Pan.position)
                     csModel.setPan(index, knb_Pan.position)
             }
-
         }
 
         Controls.Fader {

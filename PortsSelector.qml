@@ -37,10 +37,12 @@ Popup {
         model: control.model
 
         delegate: Controls.CheckPort {
-            text: portName
+            text: modelData
             onConnected1Changed: { s_ConnectPort(portName, connected1, 1) }
             onConnected2Changed: { s_ConnectPort(portName, connected2, 2) }
         }
+
+        ScrollBar.vertical: ScrollBar {}
 
     }
 }
